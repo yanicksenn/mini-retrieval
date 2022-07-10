@@ -16,5 +16,5 @@ The system should take care of the indexing and querying with a small command li
 
 # Non-Goals
 
-- There are tools available such as [terrier](http://terrier.org/) which would already provide functionality such as required above. This project should not make use of this or any similar tools as it only serves as a PoC for information retrieval systems.
+- There are tools available such as [terrier](http://terrier.org/) which would already provide the functionality stated above. This project should not make use of this or any similar tools as it only serves as a PoC for information retrieval systems and its concepts.
 
