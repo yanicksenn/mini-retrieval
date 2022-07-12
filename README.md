@@ -1,5 +1,7 @@
 # mini-retrieval
 
+[![Java CI with Maven](https://github.com/yanicksenn/mini-retrieval/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/yanicksenn/mini-retrieval/actions/workflows/maven.yml)
+
 A mini retrieval system which allows to answer queries within locally specified dataset.
 
 # Scope
