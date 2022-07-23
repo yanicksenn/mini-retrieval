@@ -14,18 +14,48 @@ class BootstrapIntegrationTest : AbstractIntegrationTest() {
 
     @BeforeEach
     fun beforeEach() {
-        File(documentsDirectory, "doc-1.txt").createNewFile()
-        File(documentsDirectory, "doc-2.txt").createNewFile()
-        File(documentsDirectory, "doc-3.txt").createNewFile()
+        createDocument("doc-1.txt", "Hello, World!")
+        createDocument("doc-2.txt", """
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Suspendisse efficitur sem ac nisl aliquet, eu suscipit nibh ullamcorper. 
+            Proin tincidunt risus lacus, et porttitor nibh condimentum pretium. 
+            Nulla sed varius tellus. 
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Nam euismod euismod tincidunt. 
+            Mauris quis dignissim dui, ac porttitor mi. 
+            Mauris mattis sed sem sit amet scelerisque. 
+            Aliquam porta justo tellus, a blandit metus vulputate nec. 
+            Mauris aliquam orci in orci elementum volutpat.
+        """)
+        createDocument("doc-3.txt", """
+            While conventional search engines ranked results by counting how many 
+            times the search terms appeared on the page, they theorized about a 
+            better system that analyzed the relationships among websites.[28] 
+            They called this algorithm PageRank; it determined a website's 
+            relevance by the number of pages, and the importance of those pages 
+            that linked back to the original site.[29][30] Page told his ideas to 
+            Hassan, who began writing the code to implement Page's ideas.[24]
+        """)
     }
 
     @Test
     fun `program iterates through files in documents directory`() {
         assertDoesNotThrow { runIntegrationTest(documentsDirectory.absolutePath) }
 
-        val outLines = out.lines()
-        assertTrue(outLines.any { it.contains("doc-1.txt") }, "doc-1 was not visited")
-        assertTrue(outLines.any { it.contains("doc-2.txt") }, "doc-2 was not visited")
-        assertTrue(outLines.any { it.contains("doc-3.txt") }, "doc-3 was not visited")
+        out.lines()
+            .assertDocumentWasVisited("doc-1.txt")
+            .assertDocumentWasVisited("doc-2.txt")
+            .assertDocumentWasVisited("doc-3.txt")
+    }
+
+    private fun List<String>.assertDocumentWasVisited(name: String): List<String> {
+        assertTrue(any { it.contains(name) }, "file $name was not visited")
+        return this
+    }
+
+    private fun createDocument(name: String, content: String) {
+        val file = File(documentsDirectory, name)
+        assertTrue(file.createNewFile(), "file $name already exists")
+        file.writeText(content.trimIndent())
     }
 }
