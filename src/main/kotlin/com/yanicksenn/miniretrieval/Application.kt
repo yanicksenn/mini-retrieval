@@ -7,17 +7,28 @@ class Application(
     private val documentsDirectory: File,
     private val tokenizer: ITokenizer) : Runnable {
 
+    private val documentIndex = HashMap<DocumentId, HashMap<String, Int>>()
+
     init {
         validateDocumentsDirectory()
     }
 
     override fun run() {
+        println("Indexing ...")
         documentsDirectory.walk()
             .filter { it.isFile }
-            .associateWith { it.tokenizeFile() }
-            .forEach { println("${it.key.absolutePath} - ${it.value.size} tokens") }
+            .forEach { file ->
+                println("  ${file.absolutePath}")
+                addFileToDocumentIndex(file)
+            }
+    }
 
-        // tokens by file will be used for indexing
+    private fun addFileToDocumentIndex(file: File) {
+        val documentId = file.toDocumentId()
+        file.tokenizeFile().forEach { token ->
+            val tokens = documentIndex.getOrPut(documentId) { HashMap() }
+            tokens[token] = tokens.getOrElse(token) { 0 } + 1
+        }
     }
 
     private fun validateDocumentsDirectory() {
@@ -27,4 +38,7 @@ class Application(
     }
 
     private fun File.tokenizeFile() = tokenizer.tokenize(readText())
+    private fun File.toDocumentId(): DocumentId = DocumentId(absolutePath)
+
+    data class DocumentId(val path: String)
 }
