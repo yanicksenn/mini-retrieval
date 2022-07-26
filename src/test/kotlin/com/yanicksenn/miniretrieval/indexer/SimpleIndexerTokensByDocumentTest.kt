@@ -33,6 +33,10 @@ class SimpleIndexerTokensByDocumentTest {
         }
     }
 
+    data class TokenAndExpectedOccurrences(
+        val token: String,
+        val expectedOccurrences: Int)
+
     class TokensByDocumentArgumentsProvider : ArgumentsProvider {
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
