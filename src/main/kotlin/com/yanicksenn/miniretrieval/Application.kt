@@ -11,8 +11,6 @@ class Application(
     private val indexer: IIndexer) : Runnable {
 
     override fun run() {
-        documentsRoot.walk()
-            .filter { it.isFile }
-            .forEach { indexer.addFileToIndex(it) }
+        indexer.addFilesToIndexRecursively(documentsRoot)
     }
 }

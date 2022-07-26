@@ -19,11 +19,7 @@ class SimpleIndexerTokensByDocumentTest {
         val indexer = SimpleIndexer(SimpleTokenizer())
         val documentsRoot = File("src/test/resources/documents")
 
-        assertDoesNotThrow {
-            documentsRoot.walk()
-                .filter { it.isFile }
-                .forEach { indexer.addFileToIndex(it) }
-        }
+        assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
 
         val tokens = indexer.findTokensByDocument(document)
         for ((token, expectedOccurrences) in expectedTokens) {

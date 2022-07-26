@@ -18,11 +18,7 @@ class SimpleIndexerTest {
     fun beforeEach() {
         indexer = SimpleIndexer(SimpleTokenizer())
 
-        assertDoesNotThrow {
-            documentsRoot.walk()
-                .filter { it.isFile }
-                .forEach { indexer.addFileToIndex(it) }
-        }
+        assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
     }
 
     @Test

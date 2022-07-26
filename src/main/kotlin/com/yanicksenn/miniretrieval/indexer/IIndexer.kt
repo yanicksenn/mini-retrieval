@@ -41,4 +41,15 @@ interface IIndexer {
      * @throws IllegalArgumentException When file is not a file
      */
     fun addFileToIndex(file: File)
+
+    /**
+     * Reads, tokenizes and then adds all files
+     * recursively to the indices.
+     * @param file File
+     */
+    fun addFilesToIndexRecursively(file: File) {
+        file.walk()
+            .filter { it.isFile }
+            .forEach { addFileToIndex(it) }
+    }
 }
