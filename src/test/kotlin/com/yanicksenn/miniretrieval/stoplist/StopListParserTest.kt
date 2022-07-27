@@ -64,17 +64,17 @@ class StopListParserTest {
             .assertSize(3)
     }
 
-    private fun StopList.assertContainsToken(token: String): StopList {
+    private fun Set<String>.assertContainsToken(token: String): Set<String> {
         assertTrue(contains(token), "stop-list should contain token $token")
         return this
     }
 
-    private fun StopList.assertDoesNotContainToken(token: String): StopList {
+    private fun Set<String>.assertDoesNotContainToken(token: String): Set<String> {
         assertFalse(contains(token), "stop-list should not contain token $token")
         return this
     }
 
-    private fun StopList.assertSize(expectedSize: Int): StopList {
+    private fun Set<String>.assertSize(expectedSize: Int): Set<String> {
         assertEquals(expectedSize, size)
         return this
     }

@@ -1,6 +1,5 @@
 package com.yanicksenn.miniretrieval.indexer
 
-import com.yanicksenn.miniretrieval.stoplist.StopList
 import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import java.io.File
 
@@ -9,7 +8,7 @@ import java.io.File
  */
 class SimpleIndexer(
     private val tokenizer: ITokenizer,
-    private val stopLists: Map<String, StopList>) : IIndexer {
+    private val stopLists: Map<String, Set<String>>) : IIndexer {
 
     private val documents = HashMap<Document, Document>()
     private val tokens = HashMap<String, String>()

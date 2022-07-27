@@ -1,7 +1,6 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.indexer.SimpleIndexer
-import com.yanicksenn.miniretrieval.stoplist.StopList
 import com.yanicksenn.miniretrieval.stoplist.StopListParser
 import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizer
 import java.io.File
@@ -18,19 +17,19 @@ class Application(
         buildIndexer(stopLists)
     }
 
-    private fun buildStopLists(): HashMap<String, StopList> {
-        val stopLists = HashMap<String, StopList>()
+    private fun buildStopLists(): HashMap<String, Set<String>> {
+        val stopLists = HashMap<String, Set<String>>()
         stopLists["english"] = parseStopList("english")
         stopLists["german"] = parseStopList("german")
         return stopLists
     }
 
-    private fun buildIndexer(stopLists: HashMap<String, StopList>) {
+    private fun buildIndexer(stopLists: HashMap<String, Set<String>>) {
         val indexer = SimpleIndexer(SimpleTokenizer(), stopLists)
         indexer.addFilesToIndexRecursively(documentsRoot)
     }
 
-    private fun parseStopList(language: String): StopList {
+    private fun parseStopList(language: String): Set<String> {
         val stopList = StopListParser(getResourceAsStream("/stopwords/$language.txt")).parse()
         println("Parsed $language stop-list with ${stopList.size} tokens")
         return stopList
