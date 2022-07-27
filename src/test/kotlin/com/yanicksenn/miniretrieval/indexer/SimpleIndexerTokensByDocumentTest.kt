@@ -16,7 +16,7 @@ class SimpleIndexerTokensByDocumentTest {
     @ParameterizedTest
     @ArgumentsSource(TokensByDocumentArgumentsProvider::class)
     fun `find tokens by document returns the correct amount of occurrences`(document: Document, expectedTokens: List<TokenAndExpectedOccurrences>) {
-        val indexer = SimpleIndexer(SimpleTokenizer())
+        val indexer = SimpleIndexer(SimpleTokenizer(), emptyMap())
         val documentsRoot = File("src/test/resources/documents")
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
