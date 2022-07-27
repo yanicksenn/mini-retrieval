@@ -2,6 +2,7 @@ package com.yanicksenn.miniretrieval.indexer
 
 import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizer
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.io.File
@@ -46,5 +47,16 @@ class SimpleIndexerTest {
 
         for (expectedToken in expectedTokens)
             assertTrue(actualTokens.contains(expectedToken), "token $expectedToken was not found in indexer")
+    }
+
+    @Test
+    @Disabled
+    fun updateTokensFile() {
+        val tokensFile = File("src/test/resources/indexer/SimpleIndexer/tokens.txt")
+        tokensFile.writeText("")
+
+        indexer.indexedTokens().sorted().forEach {
+            tokensFile.appendText(it + System.lineSeparator())
+        }
     }
 }
