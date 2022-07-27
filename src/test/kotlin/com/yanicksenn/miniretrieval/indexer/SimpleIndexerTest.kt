@@ -38,6 +38,7 @@ class SimpleIndexerTest {
     }
 
     @Test
+    @Disabled
     fun `ensure all tokens were found`() {
         val actualTokens = indexer.indexedTokens()
         val expectedTokens = File("src/test/resources/indexer/SimpleIndexer/tokens.txt").readLines()
