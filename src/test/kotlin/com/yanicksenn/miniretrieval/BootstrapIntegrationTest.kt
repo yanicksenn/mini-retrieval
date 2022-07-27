@@ -11,22 +11,6 @@ class BootstrapIntegrationTest : AbstractIntegrationTest() {
     private val documentsDirectory = File("src/test/resources/documents")
 
     @Test
-    fun `program parses english stop-list`() {
-        assertDoesNotThrow { runIntegrationTest(documentsDirectory.absolutePath) }
-
-        out.lines()
-            .assertStopListWasParsed("english")
-    }
-
-    @Test
-    fun `program parses german stop-list`() {
-        assertDoesNotThrow { runIntegrationTest(documentsDirectory.absolutePath) }
-
-        out.lines()
-            .assertStopListWasParsed("german")
-    }
-
-    @Test
     fun `program iterates through files in documents directory`() {
         assertDoesNotThrow { runIntegrationTest(documentsDirectory.absolutePath) }
 
@@ -35,12 +19,6 @@ class BootstrapIntegrationTest : AbstractIntegrationTest() {
             .assertDocumentWasVisited("doc-2.txt")
             .assertDocumentWasVisited("doc-3.txt")
             .assertDocumentWasVisited("doc-4.txt")
-    }
-
-    private fun List<String>.assertStopListWasParsed(language: String): List<String> {
-        val condition = filter { it.contains("stop-list") }.any { it.contains(language) }
-        assertTrue(condition, "$language stop-list was not parsed")
-        return this
     }
 
     private fun List<String>.assertDocumentWasVisited(name: String): List<String> {
