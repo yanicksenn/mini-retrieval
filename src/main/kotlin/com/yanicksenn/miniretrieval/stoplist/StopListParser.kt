@@ -1,12 +1,13 @@
 package com.yanicksenn.miniretrieval.stoplist
 
-import java.io.File
+import java.io.InputStream
 
 class StopListParser(
-    private val stopListFile: File) {
+    private val stopListInputStream: InputStream
+) {
 
     fun parse(): StopList {
-        val tokens = stopListFile.bufferedReader()
+        val tokens = stopListInputStream.bufferedReader()
             .lineSequence()
             .filterNot { it.startsWith("#") }
             .filterNot { it.isBlank() }

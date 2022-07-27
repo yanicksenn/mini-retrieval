@@ -2,19 +2,15 @@ package com.yanicksenn.miniretrieval.stoplist
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
-import java.io.File
+import java.io.InputStream
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class StopListParserTest {
 
-    @TempDir
-    lateinit var tempDir: File
-
     @Test
     fun `ensure parsing stop-list contains the correct tokens`() {
-        val stopListFile = createStopListFile(
+        val stopListFile = createInputStreamWithLines(
             "this",
             "that",
             "them")
@@ -28,7 +24,7 @@ class StopListParserTest {
 
     @Test
     fun `ensure lines starting with # are ignored`() {
-        val stopListFile = createStopListFile(
+        val stopListFile = createInputStreamWithLines(
             "# this",
             "that",
             "# them")
@@ -42,7 +38,7 @@ class StopListParserTest {
 
     @Test
     fun `ensure blank lines are ignored`() {
-        val stopListFile = createStopListFile(
+        val stopListFile = createInputStreamWithLines(
             "this",
             "",
             "   ",
@@ -56,7 +52,7 @@ class StopListParserTest {
 
     @Test
     fun `ensure leading and trailing whitespaces are trimmed`() {
-        val stopListFile = createStopListFile(
+        val stopListFile = createInputStreamWithLines(
             "  this  ",
             "that ",
             " them")
@@ -83,12 +79,11 @@ class StopListParserTest {
         return this
     }
 
-    private fun createStopListFile(vararg lines: String): File {
-        val stopListFile = File(tempDir, "stop-list.txt")
-        stopListFile.createNewFile()
+    private fun createInputStreamWithLines(vararg lines: String): InputStream {
+        val stringBuilder = StringBuilder()
+        for (line in lines)
+            stringBuilder.append(line + System.lineSeparator())
 
-        lines.forEach { stopListFile.appendText(it + System.lineSeparator()) }
-
-        return stopListFile
+        return stringBuilder.toString().byteInputStream()
     }
 }
