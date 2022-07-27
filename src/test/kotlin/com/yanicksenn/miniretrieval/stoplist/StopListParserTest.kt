@@ -70,11 +70,7 @@ class StopListParserTest {
 
     @Test
     fun `ensure language in stop-list is adopted from parser`() {
-        val stopListFile = createStopListFile(
-            "this",
-            "that",
-            "them")
-
+        val stopListFile = createStopListFile()
         StopListParser("english", stopListFile).parse()
             .assertLanguage("english")
     }
