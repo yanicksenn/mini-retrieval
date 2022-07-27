@@ -8,7 +8,8 @@ import java.io.File
  */
 class SimpleIndexer(
     private val tokenizer: ITokenizer,
-    private val stopLists: Map<String, Set<String>>) : IIndexer {
+    private val stopLists: Map<String, Set<String>>,
+    private val lexicons: Map<String, Set<String>>) : IIndexer {
 
     private val documents = HashMap<Document, Document>()
     private val tokens = HashMap<String, String>()
