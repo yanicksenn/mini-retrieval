@@ -1,5 +1,6 @@
-package com.yanicksenn.miniretrieval
+package com.yanicksenn.miniretrieval.integration
 
+import com.yanicksenn.miniretrieval.main
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import java.io.ByteArrayOutputStream

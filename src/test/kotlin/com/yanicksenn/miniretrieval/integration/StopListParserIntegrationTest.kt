@@ -1,4 +1,4 @@
-package com.yanicksenn.miniretrieval
+package com.yanicksenn.miniretrieval.integration
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
