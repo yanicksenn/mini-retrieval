@@ -1,13 +1,16 @@
 package com.yanicksenn.miniretrieval.indexer
 
+import com.yanicksenn.miniretrieval.stoplist.StopList
 import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import java.io.File
-import javax.print.Doc
 
 /**
  * Simple implementation of the indexer API using term frequency.
  */
-class SimpleIndexer(private val tokenizer: ITokenizer) : IIndexer {
+class SimpleIndexer(
+    private val tokenizer: ITokenizer,
+    private val stopLists: Map<String, StopList>) : IIndexer {
+
     private val documents = HashMap<Document, Document>()
     private val tokens = HashMap<String, String>()
 
@@ -38,8 +41,10 @@ class SimpleIndexer(private val tokenizer: ITokenizer) : IIndexer {
         println(file.absolutePath)
 
         val document = getDocumentReference(Document(file))
+        val stopList = stopLists["english"] ?: emptySet()
 
         file.tokenizeFile()
+            .filterNot { stopList.contains(it) }
             .map { getTokenReference(it) }
             .forEach { token ->
                 addToDocumentIndex(document, token)
