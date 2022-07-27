@@ -16,7 +16,7 @@ class SimpleIndexerTest {
 
     @BeforeEach
     fun beforeEach() {
-        indexer = SimpleIndexer(SimpleTokenizer())
+        indexer = SimpleIndexer(SimpleTokenizer(), emptyMap())
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
     }
