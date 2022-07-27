@@ -6,7 +6,7 @@ import java.io.File
 import kotlin.test.assertTrue
 
 
-class BootstrapIntegrationTest : AbstractIntegrationTest() {
+class IndexerIntegrationTest : AbstractIntegrationTest() {
 
     private val documentsDirectory = File("src/test/resources/documents")
 
