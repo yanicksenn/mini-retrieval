@@ -3,7 +3,6 @@ package com.yanicksenn.miniretrieval.stoplist
 import java.io.File
 
 class StopListParser(
-    private val language: String,
     private val stopListFile: File) {
 
     fun parse(): StopList {
@@ -14,6 +13,6 @@ class StopListParser(
             .map { it.trim() }
             .toHashSet()
 
-        return StopList(language, tokens)
+        return StopList(tokens)
     }
 }

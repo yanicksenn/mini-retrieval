@@ -19,7 +19,7 @@ class StopListParserTest {
             "that",
             "them")
 
-        StopListParser("english", stopListFile).parse()
+        StopListParser(stopListFile).parse()
             .assertContainsToken("this")
             .assertContainsToken("that")
             .assertContainsToken("them")
@@ -33,7 +33,7 @@ class StopListParserTest {
             "that",
             "# them")
 
-        StopListParser("english", stopListFile).parse()
+        StopListParser(stopListFile).parse()
             .assertDoesNotContainToken("this")
             .assertContainsToken("that")
             .assertDoesNotContainToken("them")
@@ -48,7 +48,7 @@ class StopListParserTest {
             "   ",
             "them")
 
-        StopListParser("english", stopListFile).parse()
+        StopListParser(stopListFile).parse()
             .assertContainsToken("this")
             .assertContainsToken("them")
             .assertSize(2)
@@ -61,18 +61,11 @@ class StopListParserTest {
             "that ",
             " them")
 
-        StopListParser("english", stopListFile).parse()
+        StopListParser(stopListFile).parse()
             .assertContainsToken("this")
             .assertContainsToken("that")
             .assertContainsToken("them")
             .assertSize(3)
-    }
-
-    @Test
-    fun `ensure language in stop-list is adopted from parser`() {
-        val stopListFile = createStopListFile()
-        StopListParser("english", stopListFile).parse()
-            .assertLanguage("english")
     }
 
     private fun StopList.assertContainsToken(token: String): StopList {
@@ -87,11 +80,6 @@ class StopListParserTest {
 
     private fun StopList.assertSize(expectedSize: Int): StopList {
         assertEquals(expectedSize, size)
-        return this
-    }
-
-    private fun StopList.assertLanguage(expectedLanguage: String): StopList {
-        assertEquals(expectedLanguage, language)
         return this
     }
 

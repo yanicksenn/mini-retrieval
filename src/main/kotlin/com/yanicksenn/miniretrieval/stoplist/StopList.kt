@@ -5,8 +5,7 @@ package com.yanicksenn.miniretrieval.stoplist
  * from an index.
  */
 data class StopList(
-    val language: String,
-    val tokens: Set<String>) : Set<String> {
+    private val tokens: Set<String>) : Set<String> {
 
     override val size: Int
         get() = tokens.size
