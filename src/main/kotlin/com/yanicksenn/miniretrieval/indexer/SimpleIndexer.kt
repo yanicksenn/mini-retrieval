@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval.indexer
 
+import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LanguageDeterminer
 import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import java.io.File
@@ -9,8 +10,8 @@ import java.io.File
  */
 class SimpleIndexer(
     private val tokenizer: ITokenizer,
-    private val stopLists: Map<String, Set<String>>,
-    private val lexicons: Map<String, Set<String>>) : IIndexer {
+    private val stopLists: Map<Language, Set<String>>,
+    private val lexicons: Map<Language, Set<String>>) : IIndexer {
 
     private val documents = HashMap<Document, Document>()
     private val tokens = HashMap<String, String>()
@@ -68,7 +69,7 @@ class SimpleIndexer(
     private fun addToIndicesWithLanguage(
         document: Document,
         tokens: List<String>,
-        language: String
+        language: Language
     ) {
         val stopList = stopLists[language] ?: emptySet()
         tokens

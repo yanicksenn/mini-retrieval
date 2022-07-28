@@ -8,8 +8,8 @@ class LanguageDeterminerTest {
 
     private var tokenizer = SimpleTokenizer()
     private var lexicon = mapOf(
-        "english" to EnglishLexiconParser().parse(),
-        "german" to GermanLexiconParser().parse(),
+        Language.ENGLISH to EnglishLexiconParser().parse(),
+        Language.GERMAN to GermanLexiconParser().parse(),
     )
 
     @Test
@@ -26,7 +26,7 @@ class LanguageDeterminerTest {
         val languageDeterminer = LanguageDeterminer(lexicon)
         languageDeterminer.readTokens(tokenizer.tokenize(text))
 
-        assertEquals(LanguageDeterminer.Match(hashSetOf("english")), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(hashSetOf(Language.ENGLISH)), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -43,7 +43,7 @@ class LanguageDeterminerTest {
         val languageDeterminer = LanguageDeterminer(lexicon)
         languageDeterminer.readTokens(tokenizer.tokenize(text))
 
-        assertEquals(LanguageDeterminer.Match(hashSetOf("german")), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(hashSetOf(Language.GERMAN)), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -78,6 +78,6 @@ class LanguageDeterminerTest {
         languageDeterminer.readToken("i")
         languageDeterminer.readToken("you")
 
-        assertEquals(LanguageDeterminer.Match(hashSetOf("english", "german")), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(hashSetOf(Language.ENGLISH, Language.GERMAN)), languageDeterminer.currentLanguage)
     }
 }

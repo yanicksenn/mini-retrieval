@@ -1,10 +1,12 @@
 package com.yanicksenn.miniretrieval.stoplist
 
+import com.yanicksenn.miniretrieval.language.Language
+
 object StopListsBuilder {
-    fun build(): HashMap<String, Set<String>> {
+    fun build(): HashMap<Language, Set<String>> {
         return hashMapOf(
-            "english" to EnglishStopListParser().parse(),
-            "german" to GermanStopListParser().parse(),
+            Language.ENGLISH to EnglishStopListParser().parse(),
+            Language.GERMAN to GermanStopListParser().parse(),
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.indexer.SimpleIndexer
+import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListParser
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
@@ -20,7 +21,7 @@ class Application(
         buildIndexer(stopLists, lexicons)
     }
 
-    private fun buildIndexer(stopLists: HashMap<String, Set<String>>, lexicons: HashMap<String, Set<String>>) {
+    private fun buildIndexer(stopLists: HashMap<Language, Set<String>>, lexicons: HashMap<Language, Set<String>>) {
         val indexer = SimpleIndexer(SimpleTokenizer(), stopLists, lexicons)
         indexer.addFilesToIndexRecursively(documentsRoot)
     }

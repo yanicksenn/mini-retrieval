@@ -6,10 +6,10 @@ import java.lang.Integer.max
  * Determines the language of a document by reading its tokens
  * and matching them to lexicons.
  */
-class LanguageDeterminer(lexicons: Map<String, Set<String>>) {
+class LanguageDeterminer(lexicons: Map<Language, Set<String>>) {
 
-    private val languageByToken = HashMap<String, HashSet<String>>()
-    private val languageScore = HashMap<String, Int>()
+    private val languageByToken = HashMap<String, HashSet<Language>>()
+    private val languageScore = HashMap<Language, Int>()
 
     private var currentMaxScore = 0
     private var tokensRead = 0
@@ -89,6 +89,6 @@ class LanguageDeterminer(lexicons: Map<String, Set<String>>) {
     /**
      * When at least one language is matched.
      */
-    data class Match(val languages: Set<String>) : Result
+    data class Match(val languages: Set<Language>) : Result
 
 }

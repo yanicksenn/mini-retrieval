@@ -1,10 +1,10 @@
 package com.yanicksenn.miniretrieval.language
 
 object LexiconsBuilder {
-    fun build(): HashMap<String, Set<String>> {
+    fun build(): HashMap<Language, Set<String>> {
         return hashMapOf(
-            "english" to EnglishLexiconParser().parse(),
-            "german" to GermanLexiconParser().parse(),
+            Language.ENGLISH to EnglishLexiconParser().parse(),
+            Language.GERMAN to GermanLexiconParser().parse(),
         )
     }
 }
