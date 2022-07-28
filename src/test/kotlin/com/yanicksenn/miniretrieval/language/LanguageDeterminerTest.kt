@@ -26,7 +26,7 @@ class LanguageDeterminerTest {
         val languageDeterminer = LanguageDeterminer(lexicon)
         languageDeterminer.readTokens(tokenizer.tokenize(text))
 
-        assertEquals(LanguageDeterminer.Single("english"), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(hashSetOf("english")), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -43,7 +43,7 @@ class LanguageDeterminerTest {
         val languageDeterminer = LanguageDeterminer(lexicon)
         languageDeterminer.readTokens(tokenizer.tokenize(text))
 
-        assertEquals(LanguageDeterminer.Single("german"), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(hashSetOf("german")), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -78,6 +78,6 @@ class LanguageDeterminerTest {
         languageDeterminer.readToken("i")
         languageDeterminer.readToken("you")
 
-        assertEquals(LanguageDeterminer.Multiple(hashSetOf("english", "german")), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(hashSetOf("english", "german")), languageDeterminer.currentLanguage)
     }
 }

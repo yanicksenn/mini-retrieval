@@ -24,12 +24,7 @@ class LanguageDeterminer(lexicons: Map<String, Set<String>>) {
                 return Nothing
 
             val bestMatches = languageScore.filter { it.value == currentMaxScore }.keys.toHashSet()
-            return if (bestMatches.size == 1) {
-                Single(bestMatches.first())
-
-            } else {
-                Multiple(bestMatches)
-            }
+            return Match(bestMatches)
         }
 
 
@@ -87,17 +82,13 @@ class LanguageDeterminer(lexicons: Map<String, Set<String>>) {
     sealed interface Result
 
     /**
-     * No language is determined.
+     * No language is matched.
      */
     object Nothing : Result
 
     /**
-     * A single language is determined.
+     * When at least one language is matched.
      */
-    data class Single(val language: String) : Result
+    data class Match(val languages: Set<String>) : Result
 
-    /**
-     * Multiple languages are determined.
-     */
-    data class Multiple(val languages: Set<String>) : Result
 }
