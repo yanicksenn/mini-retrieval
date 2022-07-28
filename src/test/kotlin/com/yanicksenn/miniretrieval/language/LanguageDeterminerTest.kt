@@ -7,10 +7,7 @@ import kotlin.test.assertEquals
 class LanguageDeterminerTest {
 
     private var tokenizer = SimpleTokenizer()
-    private var lexicon = mapOf(
-        Language.ENGLISH to EnglishLexiconParser().parse(),
-        Language.GERMAN to GermanLexiconParser().parse(),
-    )
+    private var lexicons = LexiconsBuilder.build()
 
     @Test
     fun `ensure text is found to be english`() {
@@ -23,7 +20,7 @@ class LanguageDeterminerTest {
             pictures or conversation?'
         """
 
-        val languageDeterminer = LanguageDeterminer(lexicon)
+        val languageDeterminer = LanguageDeterminer(lexicons)
         languageDeterminer.readTokens(tokenizer.tokenize(text))
 
         assertEquals(LanguageDeterminer.Match(hashSetOf(Language.ENGLISH)), languageDeterminer.currentLanguage)
@@ -40,7 +37,7 @@ class LanguageDeterminerTest {
             Gespräche?“
         """
 
-        val languageDeterminer = LanguageDeterminer(lexicon)
+        val languageDeterminer = LanguageDeterminer(lexicons)
         languageDeterminer.readTokens(tokenizer.tokenize(text))
 
         assertEquals(LanguageDeterminer.Match(hashSetOf(Language.GERMAN)), languageDeterminer.currentLanguage)
@@ -48,13 +45,13 @@ class LanguageDeterminerTest {
 
     @Test
     fun `ensure no language is determined when no tokens are read`() {
-        val languageDeterminer = LanguageDeterminer(lexicon)
+        val languageDeterminer = LanguageDeterminer(lexicons)
         assertEquals(LanguageDeterminer.Nothing, languageDeterminer.currentLanguage)
     }
 
     @Test
     fun `ensure assurrance is zero when no tokens are read`() {
-        val languageDeterminer = LanguageDeterminer(lexicon)
+        val languageDeterminer = LanguageDeterminer(lexicons)
         assertEquals(0.0, languageDeterminer.currentAssurrance)
     }
 
@@ -70,7 +67,7 @@ class LanguageDeterminerTest {
 
     @Test
     fun `ensure multiple languages are returned when there is no clear language`() {
-        val languageDeterminer = LanguageDeterminer(lexicon)
+        val languageDeterminer = LanguageDeterminer(lexicons)
 
         languageDeterminer.readToken("ich")
         languageDeterminer.readToken("du")
