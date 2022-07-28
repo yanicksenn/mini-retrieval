@@ -15,13 +15,18 @@ class Application(
     private val documentsRoot: File) : Runnable {
 
     override fun run() {
+        val normalizer = SimpleNormalizer()
         val stopLists = StopListsBuilder.build()
         val lexicons = LexiconsBuilder.build()
-        buildIndexer(stopLists, lexicons)
+        buildIndexer(normalizer, stopLists, lexicons)
     }
 
-    private fun buildIndexer(stopLists: HashMap<Language, Set<String>>, lexicons: HashMap<Language, Set<String>>) {
-        val indexer = SimpleIndexer(SimpleTokenizer(SimpleNormalizer()), stopLists, lexicons)
+    private fun buildIndexer(
+        normalizer: SimpleNormalizer,
+        stopLists: HashMap<Language, Set<String>>,
+        lexicons: HashMap<Language, Set<String>>
+    ) {
+        val indexer = SimpleIndexer(SimpleTokenizer(normalizer), stopLists, lexicons)
         indexer.addFilesToIndexRecursively(documentsRoot)
     }
 }
