@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval.indexer
 
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
+import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
 import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -11,12 +12,7 @@ class SimpleIndexerTossesStopWordsTest {
 
     @Test
     fun `ensure stop-words are tossed from the indices`() {
-        val stopLists = mapOf(
-            "english" to setOf("the", "as"),
-            "german" to setOf("der", "wie")
-        )
-
-        val indexer = SimpleIndexer(SimpleTokenizer(), stopLists, LexiconsBuilder.build())
+        val indexer = SimpleIndexer(SimpleTokenizer(), StopListsBuilder.build(), LexiconsBuilder.build())
         val documentsRoot = File("src/test/resources/documents")
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }

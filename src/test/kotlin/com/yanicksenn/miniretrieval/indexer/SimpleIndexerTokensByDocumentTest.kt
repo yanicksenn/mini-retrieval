@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval.indexer
 
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
+import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
 import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizer
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -17,7 +18,7 @@ class SimpleIndexerTokensByDocumentTest {
     @ParameterizedTest
     @ArgumentsSource(TokensByDocumentArgumentsProvider::class)
     fun `find tokens by document returns the correct amount of occurrences`(document: Document, expectedTokens: List<TokenAndExpectedOccurrences>) {
-        val indexer = SimpleIndexer(SimpleTokenizer(), emptyMap(), LexiconsBuilder.build())
+        val indexer = SimpleIndexer(SimpleTokenizer(), StopListsBuilder.build(), LexiconsBuilder.build())
         val documentsRoot = File("src/test/resources/documents")
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
@@ -48,10 +49,8 @@ class SimpleIndexerTokensByDocumentTest {
                 )),
                 Arguments.of(Document(File("src/test/resources/documents/doc-3.txt")), listOf(
                     TokenAndExpectedOccurrences("page", 3),
-                    TokenAndExpectedOccurrences("the", 7),
                 )),
                 Arguments.of(Document(File("src/test/resources/documents/doc-4.txt")), listOf(
-                    TokenAndExpectedOccurrences("are", 3),
                     TokenAndExpectedOccurrences("jedi", 1),
                 ))
             )
