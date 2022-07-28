@@ -1,18 +1,13 @@
 package com.yanicksenn.miniretrieval.tokenizer
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class SimpleTokenizerTest {
 
-    private lateinit var tokenizer: ITokenizer
-
-    @BeforeEach
-    fun beforeEach() {
-        tokenizer = SimpleTokenizer()
-    }
+    private val normalizer = SimpleNormalizer()
+    private val tokenizer = SimpleTokenizer(normalizer)
 
     @Test
     fun `empty text should return no tokens`() {
@@ -66,5 +61,40 @@ class SimpleTokenizerTest {
         val tokens = tokenizer.tokenize("I am at home.")
         assertTrue(tokens.size == 4)
         assertTrue(tokens.containsAll(listOf("i", "am", "at", "home")))
+    }
+
+    @Test
+    fun `ensure concatenated words are merged`() {
+        val tokens = tokenizer.tokenize("spider-man and iron-man")
+        assertTrue(tokens.size == 3)
+        assertTrue(tokens.containsAll(listOf("spiderman", "and", "ironman")))
+    }
+
+    @Test
+    fun `ensure slashed words are separated`() {
+        val tokens = tokenizer.tokenize("milk/cream")
+        assertTrue(tokens.size == 2)
+        assertTrue(tokens.containsAll(listOf("milk", "cream")))
+    }
+
+    @Test
+    fun `ensure leading dash is removed`() {
+        val tokens = tokenizer.tokenize("-this")
+        assertTrue(tokens.size == 1)
+        assertTrue(tokens.contains("this"))
+    }
+
+    @Test
+    fun `ensure trailing dash is removed`() {
+        val tokens = tokenizer.tokenize("this-")
+        assertTrue(tokens.size == 1)
+        assertTrue(tokens.contains("this"))
+    }
+
+    @Test
+    fun `ensure abbreviated word is merged`() {
+        val tokens = tokenizer.tokenize("that's it")
+        assertTrue(tokens.size == 2)
+        assertTrue(tokens.containsAll(listOf("thats", "it")))
     }
 }

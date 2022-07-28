@@ -3,32 +3,22 @@ package com.yanicksenn.miniretrieval.tokenizer
 /**
  * Simple implementation of the tokenizer API.
  */
-class SimpleTokenizer : ITokenizer {
+class SimpleTokenizer(private val normalizer: INormalizer) : ITokenizer {
+
     override fun tokenize(text: String): List<String> {
         if (text.isBlank())
             return emptyList()
 
-        val tokens = mutableListOf<String>()
-        val currentToken = StringBuilder()
-
-        // tokenize with O(n) by checking each character
-        // and appending it to the current token if it's
-        // a letter or a digit.
-        for (i in text.indices) {
-            val c = text[i]
-            if (c.isLetterOrDigit()) {
-                currentToken.append(c.lowercaseChar())
-
-            } else if (currentToken.isNotEmpty()) {
-                tokens.add(currentToken.toString())
-                currentToken.clear()
-            }
-        }
-
-        // Append last token if the buffer is not empty.
-        if (currentToken.isNotEmpty())
-            tokens.add(currentToken.toString())
-
-        return tokens
+        return text.split("\\s+")
+            .asSequence()
+            .map { it.lowercase() }
+            .map { normalizer.normalize(it) }
+            .map { it.split(" ") }.flatten()
+            .map { it.split("/") }.flatten()
+            .map { it.replace("\\W+".toRegex(), "") }
+            .map { it.trim() }
+            .filterNot { it.isBlank() }
+            .filterNot { it.matches("[\\d\\W]+".toRegex()) }
+            .toList()
     }
 }

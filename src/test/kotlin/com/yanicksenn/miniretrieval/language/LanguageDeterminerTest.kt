@@ -1,12 +1,14 @@
 package com.yanicksenn.miniretrieval.language
 
+import com.yanicksenn.miniretrieval.tokenizer.SimpleNormalizer
 import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizer
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class LanguageDeterminerTest {
 
-    private var tokenizer = SimpleTokenizer()
+    private val normalizer = SimpleNormalizer()
+    private var tokenizer = SimpleTokenizer(normalizer)
     private var lexicons = LexiconsBuilder.build()
 
     @Test
