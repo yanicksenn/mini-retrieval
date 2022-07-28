@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval.indexer
 
+import com.yanicksenn.miniretrieval.language.LanguageDeterminer
 import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import java.io.File
 
@@ -40,16 +41,20 @@ class SimpleIndexer(
 
         println(file.absolutePath)
 
+        val tokens = file.tokenizeFile()
         val document = getDocumentReference(Document(file))
-        val stopList = stopLists["english"] ?: emptySet()
+        val languageDeterminer = LanguageDeterminer(lexicons)
+        languageDeterminer.readTokens(tokens)
 
-        file.tokenizeFile()
-            .filterNot { stopList.contains(it) }
-            .map { getTokenReference(it) }
-            .forEach { token ->
-                addToDocumentIndex(document, token)
-                addToInvertedDocumentIndex(document, token)
+        when (val languageResult = languageDeterminer.currentLanguage) {
+            is LanguageDeterminer.Nothing -> return
+            is LanguageDeterminer.Match -> {
+                val languages = languageResult.languages
+                for (language in languages) {
+                    addToIndicesWithLanguage(document, tokens, language)
+                }
             }
+        }
     }
 
     private fun getDocumentReference(potentialDocumentReference: Document): Document {
@@ -58,6 +63,21 @@ class SimpleIndexer(
 
     private fun getTokenReference(potentialTokenReference: String): String {
         return tokens.getOrPut(potentialTokenReference) { potentialTokenReference }
+    }
+
+    private fun addToIndicesWithLanguage(
+        document: Document,
+        tokens: List<String>,
+        language: String
+    ) {
+        val stopList = stopLists[language] ?: emptySet()
+        tokens
+            .filterNot { stopList.contains(it) }
+            .map { getTokenReference(it) }
+            .forEach { token ->
+                addToDocumentIndex(document, token)
+                addToInvertedDocumentIndex(document, token)
+            }
     }
 
     private fun addToDocumentIndex(document: Document, token: String) {
