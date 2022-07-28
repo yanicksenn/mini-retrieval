@@ -15,17 +15,9 @@ class Application(
     private val documentsRoot: File) : Runnable {
 
     override fun run() {
-        val stopLists = buildStopLists()
-        val lexicons = buildLexicons()
+        val stopLists = StopListsBuilder.build()
+        val lexicons = LexiconsBuilder.build()
         buildIndexer(stopLists, lexicons)
-    }
-
-    private fun buildStopLists(): HashMap<String, Set<String>> {
-        return StopListsBuilder.build()
-    }
-
-    private fun buildLexicons(): HashMap<String, Set<String>> {
-        return LexiconsBuilder.build()
     }
 
     private fun buildIndexer(stopLists: HashMap<String, Set<String>>, lexicons: HashMap<String, Set<String>>) {
