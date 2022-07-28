@@ -9,11 +9,10 @@ class SimpleTokenizer(private val normalizer: INormalizer) : ITokenizer {
         if (text.isBlank())
             return emptyList()
 
-        return text.split("\\s+")
+        return text.split("\\s".toRegex())
             .asSequence()
             .map { it.lowercase() }
             .map { normalizer.normalize(it) }
-            .map { it.split(" ") }.flatten()
             .map { it.split("/") }.flatten()
             .map { it.replace("\\W+".toRegex(), "") }
             .map { it.trim() }

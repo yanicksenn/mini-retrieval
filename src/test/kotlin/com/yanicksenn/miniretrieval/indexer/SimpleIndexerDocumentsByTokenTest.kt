@@ -43,8 +43,8 @@ class SimpleIndexerDocumentsByTokenTest {
                     DocumentAndExpectedOccurrences(Document(File("src/test/resources/documents/doc-1.txt")), 1),
                 )),
                 Arguments.of("galaxy", listOf(
-                    DocumentAndExpectedOccurrences(Document(File("src/test/resources/documents/doc-4.txt")), 2),
-                ))
+                    DocumentAndExpectedOccurrences(Document(File("src/test/resources/documents/doc-4.txt")), 1),
+                )),
             )
         }
     }

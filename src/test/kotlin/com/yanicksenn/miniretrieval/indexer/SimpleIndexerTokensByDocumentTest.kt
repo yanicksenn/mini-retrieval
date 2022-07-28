@@ -49,7 +49,7 @@ class SimpleIndexerTokensByDocumentTest {
                     TokenAndExpectedOccurrences("blandit", 1)
                 )),
                 Arguments.of(Document(File("src/test/resources/documents/doc-3.txt")), listOf(
-                    TokenAndExpectedOccurrences("page", 3),
+                    TokenAndExpectedOccurrences("page", 2),
                 )),
                 Arguments.of(Document(File("src/test/resources/documents/doc-4.txt")), listOf(
                     TokenAndExpectedOccurrences("jedi", 1),
