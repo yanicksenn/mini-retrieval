@@ -12,7 +12,8 @@ class SimpleIndexerTossesStopWordsTest {
     @Test
     fun `ensure stop-words are tossed from the indices`() {
         val stopLists = mapOf(
-            "english" to setOf("the", "as")
+            "english" to setOf("the", "as"),
+            "german" to setOf("der", "wie")
         )
 
         val indexer = SimpleIndexer(SimpleTokenizer(), stopLists, LexiconsBuilder.build())
