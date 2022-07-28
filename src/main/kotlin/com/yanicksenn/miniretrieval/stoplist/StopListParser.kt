@@ -5,7 +5,7 @@ import java.io.InputStream
 /**
  * Parser for stop lists.
  */
-class StopListParser(private val stopListInputStream: InputStream) {
+open class StopListParser(private val stopListInputStream: InputStream) {
 
     companion object {
         /**
@@ -16,12 +16,18 @@ class StopListParser(private val stopListInputStream: InputStream) {
         private val COMMENTS_REGEX = "^\\s*#.*".toRegex()
     }
 
+    private var stopList: HashSet<String>? = null
+
     fun parse(): Set<String> {
-        return stopListInputStream.bufferedReader()
-            .lineSequence()
-            .filterNot { it.matches(COMMENTS_REGEX) }
-            .filterNot { it.isBlank() }
-            .map { it.trim() }
-            .toHashSet()
+        if (stopList == null) {
+            stopList = stopListInputStream.bufferedReader()
+                .lineSequence()
+                .filterNot { it.matches(COMMENTS_REGEX) }
+                .filterNot { it.isBlank() }
+                .map { it.trim() }
+                .toHashSet()
+        }
+
+        return stopList!!
     }
 }
