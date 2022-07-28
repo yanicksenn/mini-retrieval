@@ -42,8 +42,11 @@ class SimpleIndexer(
 
         println(file.absolutePath)
 
+        // O(n) parsing file and tokenize
         val tokens = file.tokenizeFile()
         val document = getDocumentReference(Document(file))
+
+        // O(n) reading tokens and matching them to language
         val languageDeterminer = LanguageDeterminer(lexicons)
         languageDeterminer.readTokens(tokens)
 
@@ -71,6 +74,7 @@ class SimpleIndexer(
         tokens: List<String>,
         language: Language
     ) {
+        // O(n) filter tokens and adding them to the indices
         val stopList = stopLists[language] ?: emptySet()
         tokens
             .filterNot { stopList.contains(it) }
