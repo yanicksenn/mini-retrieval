@@ -1,11 +1,11 @@
 package com.yanicksenn.miniretrieval.stemmer
 
-import opennlp.tools.stemmer.snowball.SnowballStemmer
+import com.yanicksenn.miniretrieval.stemmer.opennlp.GermanStemmerOpennlp
 
 class SimpleGermanStemmer : IStemmer {
-    private val stemmer = SnowballStemmer(SnowballStemmer.ALGORITHM.GERMAN)
+    private val stemmer = GermanStemmerOpennlp()
 
     override fun stem(token: String): String {
-        return stemmer.stem(token).toString()
+        return stemmer.stem(token)
     }
 }
