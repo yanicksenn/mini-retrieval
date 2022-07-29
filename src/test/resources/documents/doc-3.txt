@@ -1,7 +1,1 @@
-While conventional search engines ranked results by counting how many
-times the search terms appeared on the page, they theorized about a
-better system that analyzed the relationships among websites.[28]
-They called this algorithm PageRank; it determined a website's
-relevance by the number of pages, and the importance of those pages
-that linked back to the original site.[29][30] Page told his ideas to
-Hassan, who began writing the code to implement Page's ideas.[24]
+While conventional search engines ranked results by counting how many times the search terms appeared on the page, they theorized about a better system that analyzed the relationships among websites.[28] They called this algorithm PageRank; it determined a website's relevance by the number of pages, and the importance of those pages that linked back to the original site.[29][30] Page told his ideas to Hassan, who began writing the code to implement Page's ideas.[24]
