@@ -1,14 +1,15 @@
 package com.yanicksenn.miniretrieval.tokenizer
 
+import opennlp.tools.tokenize.WhitespaceTokenizer
+
 /**
  * Simple implementation of the tokenizer API.
  */
 class SimpleTokenizer : ITokenizer {
+    private val tokenizer = WhitespaceTokenizer.INSTANCE
 
     override fun tokenize(text: String): List<String> {
-        if (text.isBlank())
-            return emptyList()
-
-        return text.split("\\s+".toRegex()).toList()
+        return tokenizer.tokenize(text).toList()
     }
+
 }
