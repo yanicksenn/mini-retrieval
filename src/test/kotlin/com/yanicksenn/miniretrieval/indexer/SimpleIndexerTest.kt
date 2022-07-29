@@ -1,9 +1,5 @@
 package com.yanicksenn.miniretrieval.indexer
 
-import com.yanicksenn.miniretrieval.language.LexiconsBuilder
-import com.yanicksenn.miniretrieval.stemmer.SimpleStemmersBuilder
-import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
-import com.yanicksenn.miniretrieval.tokenizer.TokenizersBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -20,7 +16,7 @@ class SimpleIndexerTest {
 
     @BeforeEach
     fun beforeEach() {
-        indexer = SimpleIndexer(TokenizersBuilder.build(), StopListsBuilder.build(), LexiconsBuilder.build(), SimpleStemmersBuilder.build())
+        indexer = SimpleIndexerBuilder.build()
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
     }
