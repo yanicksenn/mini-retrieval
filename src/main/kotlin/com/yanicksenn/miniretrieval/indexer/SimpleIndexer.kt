@@ -48,7 +48,7 @@ class SimpleIndexer(
         val languageResult = determineLanguage(text)
 
         // O(n) parsing file and tokenize
-        val document = getDocumentReference(Document(file))
+        val document = getDocumentReference(Document(file.absolutePath))
         when (languageResult) {
             is LanguageDeterminer.Nothing -> return
             is LanguageDeterminer.Match -> {
