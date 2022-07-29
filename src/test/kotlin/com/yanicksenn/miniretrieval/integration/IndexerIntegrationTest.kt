@@ -15,8 +15,8 @@ class IndexerIntegrationTest : AbstractIntegrationTest() {
         assertDoesNotThrow { runIntegrationTest(documentsDirectory.absolutePath) }
 
         out.lines()
-            .assertDocumentWasVisited("doc-3.txt")
-            .assertDocumentWasVisited("doc-4.txt")
+            .assertDocumentWasVisited("google.txt")
+            .assertDocumentWasVisited("starwars.txt")
     }
 
     private fun List<String>.assertDocumentWasVisited(name: String): List<String> {
