@@ -22,6 +22,7 @@ class SimpleIndexer(
 
     private val tokensByDocumentIndex = HashMap<Document, HashMap<String, Int>>()
     private val documentsByTokenIndex = HashMap<String, HashMap<Document, Int>>()
+    private val languageByDocumentIndex = HashMap<Document, HashSet<Language>>()
 
     init {
         stopLists.keys.forEach { language ->
@@ -71,7 +72,7 @@ class SimpleIndexer(
                         .map { stemmer.stem(it) }
                         .filterNot { stopList.contains(it) }
                         .flatMap { listOf(it, it.replace("".toRegex(), "")) }
-                        .forEach { addToIndices(Document(file.absolutePath), it) }
+                        .forEach { addToIndices(Document(file.absolutePath), it, language) }
                 }
             }
         }
@@ -83,11 +84,14 @@ class SimpleIndexer(
         return languageDeterminer.currentLanguage
     }
 
-    private fun addToIndices(document: Document, token: String) {
+    private fun addToIndices(document: Document, token: String, language: Language) {
         val tokens = tokensByDocumentIndex.getOrPut(document) { HashMap() }
         tokens[token] = tokens.getOrDefault(token, 0) + 1
 
         val documents = documentsByTokenIndex.getOrPut(token) { HashMap() }
         documents[document] = documents.getOrDefault(document, 0) + 1
+
+        val languages = languageByDocumentIndex.getOrPut(document) { HashSet() }
+        languages.add(language)
     }
 }
