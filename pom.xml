@@ -19,6 +19,7 @@
         <surefire.version>3.0.0-M5</surefire.version>
         <failsafe.version>3.0.0-M5</failsafe.version>
         <junit.version>5.8.2</junit.version>
+        <opennlp.version>2.0.0</opennlp.version>
     </properties>
 
     <build>
@@ -107,6 +108,11 @@
             <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.opennlp</groupId>
+            <artifactId>opennlp-tools</artifactId>
+            <version>${opennlp.version}</version>
         </dependency>
     </dependencies>
 </project>
