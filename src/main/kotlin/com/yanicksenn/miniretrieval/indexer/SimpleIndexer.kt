@@ -10,7 +10,7 @@ import java.io.File
  * Simple implementation of the indexer API using term frequency.
  */
 class SimpleIndexer(
-    private val tokenizer: ITokenizer,
+    private val tokenizers: Map<Language, ITokenizer>,
     private val stopLists: Map<Language, Set<String>>,
     private val lexicons: Map<Language, Set<String>>,
     private val stemmers: Map<Language, IStemmer>) : IIndexer {
@@ -44,37 +44,31 @@ class SimpleIndexer(
 
         println(file.absolutePath)
 
+        val text = file.readText().lowercase()
+        val languageResult = determineLanguage(text)
+
         // O(n) parsing file and tokenize
-        val tokens = file.tokenizeFile()
         val document = getDocumentReference(Document(file))
-
-        // O(n) reading tokens and matching them to language
-        val languageDeterminer = LanguageDeterminer(lexicons)
-        languageDeterminer.readTokens(tokens)
-
-        when (val languageResult = languageDeterminer.currentLanguage) {
+        when (languageResult) {
             is LanguageDeterminer.Nothing -> return
             is LanguageDeterminer.Match -> {
                 val languages = languageResult.languages
                 for (language in languages) {
+                    val tokens = tokenizeText(text, language)
                     stemTokensAndAddToIndices(tokens, language, document)
                 }
             }
         }
     }
 
-    private fun stemTokensAndAddToIndices(
-        tokens: List<String>,
-        language: Language,
-        document: Document
-    ) {
-        val stemmedTokens = stemTokens(tokens, language)
-        addToIndicesWithLanguage(document, stemmedTokens, language)
+    private fun tokenizeText(text: String, language: Language): List<String> {
+        return tokenizers[language]!!.tokenize(text)
     }
 
-    private fun stemTokens(tokens: List<String>, language: Language): List<String> {
-        val stemmer = stemmers[language]!!
-        return tokens.map { stemmer.stem(it) }
+    private fun determineLanguage(text: String): LanguageDeterminer.Result {
+        val languageDeterminer = LanguageDeterminer(lexicons)
+        languageDeterminer.readText(text)
+        return languageDeterminer.currentLanguage
     }
 
     private fun getDocumentReference(potentialDocumentReference: Document): Document {
@@ -83,6 +77,16 @@ class SimpleIndexer(
 
     private fun getTokenReference(potentialTokenReference: String): String {
         return tokens.getOrPut(potentialTokenReference) { potentialTokenReference }
+    }
+
+    private fun stemTokensAndAddToIndices(tokens: List<String>, language: Language, document: Document) {
+        val stemmedTokens = stemTokens(tokens, language)
+        addToIndicesWithLanguage(document, stemmedTokens, language)
+    }
+
+    private fun stemTokens(tokens: List<String>, language: Language): List<String> {
+        val stemmer = stemmers[language]!!
+        return tokens.map { stemmer.stem(it) }
     }
 
     private fun addToIndicesWithLanguage(
@@ -110,6 +114,4 @@ class SimpleIndexer(
         val documents = documentsByTokenIndex.getOrPut(token) { HashMap() }
         documents[document] = documents.getOrDefault(document, 0) + 1
     }
-
-    private fun File.tokenizeFile() = tokenizer.tokenize(readText())
 }

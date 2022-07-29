@@ -7,6 +7,6 @@ class SimpleTokenizerBuilderTest {
 
     @Test
     fun `ensure simple tokenizer builder works`() {
-        assertDoesNotThrow { SimpleTokenizerBuilder.build() }
+        assertDoesNotThrow { TokenizersBuilder.build() }
     }
 }
