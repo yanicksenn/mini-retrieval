@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval.indexer
 
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
+import com.yanicksenn.miniretrieval.stemmer.SimpleStemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
 import com.yanicksenn.miniretrieval.tokenizer.SimpleNormalizer
 import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizer
@@ -13,7 +14,7 @@ class SimpleIndexerTossesStopWordsTest {
 
     @Test
     fun `ensure stop-words are tossed from the indices`() {
-        val indexer = SimpleIndexer(SimpleTokenizer(SimpleNormalizer()), StopListsBuilder.build(), LexiconsBuilder.build())
+        val indexer = SimpleIndexer(SimpleTokenizer(SimpleNormalizer()), StopListsBuilder.build(), LexiconsBuilder.build(), SimpleStemmersBuilder.build())
         val documentsRoot = File("src/test/resources/documents")
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }

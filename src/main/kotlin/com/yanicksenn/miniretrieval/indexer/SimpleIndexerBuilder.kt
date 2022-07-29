@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval.indexer
 
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
+import com.yanicksenn.miniretrieval.stemmer.SimpleStemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
 import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizerBuilder
 
@@ -9,7 +10,8 @@ object SimpleIndexerBuilder {
         return SimpleIndexer(
             SimpleTokenizerBuilder.build(),
             StopListsBuilder.build(),
-            LexiconsBuilder.build()
+            LexiconsBuilder.build(),
+            SimpleStemmersBuilder.build()
         )
     }
 }

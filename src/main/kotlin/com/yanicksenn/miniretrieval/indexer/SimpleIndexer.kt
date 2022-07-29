@@ -2,6 +2,7 @@ package com.yanicksenn.miniretrieval.indexer
 
 import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LanguageDeterminer
+import com.yanicksenn.miniretrieval.stemmer.IStemmer
 import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import java.io.File
 
@@ -11,7 +12,8 @@ import java.io.File
 class SimpleIndexer(
     private val tokenizer: ITokenizer,
     private val stopLists: Map<Language, Set<String>>,
-    private val lexicons: Map<Language, Set<String>>) : IIndexer {
+    private val lexicons: Map<Language, Set<String>>,
+    private val stemmers: Map<Language, IStemmer>) : IIndexer {
 
     private val documents = HashMap<Document, Document>()
     private val tokens = HashMap<String, String>()
@@ -55,10 +57,24 @@ class SimpleIndexer(
             is LanguageDeterminer.Match -> {
                 val languages = languageResult.languages
                 for (language in languages) {
-                    addToIndicesWithLanguage(document, tokens, language)
+                    stemTokensAndAddToIndices(tokens, language, document)
                 }
             }
         }
+    }
+
+    private fun stemTokensAndAddToIndices(
+        tokens: List<String>,
+        language: Language,
+        document: Document
+    ) {
+        val stemmedTokens = stemTokens(tokens, language)
+        addToIndicesWithLanguage(document, stemmedTokens, language)
+    }
+
+    private fun stemTokens(tokens: List<String>, language: Language): List<String> {
+        val stemmer = stemmers[language]!!
+        return tokens.map { stemmer.stem(it) }
     }
 
     private fun getDocumentReference(potentialDocumentReference: Document): Document {
