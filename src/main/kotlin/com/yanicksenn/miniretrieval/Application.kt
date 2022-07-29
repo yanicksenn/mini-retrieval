@@ -3,9 +3,10 @@ package com.yanicksenn.miniretrieval
 import com.yanicksenn.miniretrieval.indexer.SimpleIndexer
 import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
+import com.yanicksenn.miniretrieval.stemmer.IStemmer
+import com.yanicksenn.miniretrieval.stemmer.SimpleStemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
-import com.yanicksenn.miniretrieval.tokenizer.SimpleNormalizer
-import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizer
+import com.yanicksenn.miniretrieval.tokenizer.*
 import java.io.File
 
 /**
@@ -15,18 +16,20 @@ class Application(
     private val documentsRoot: File) : Runnable {
 
     override fun run() {
-        val normalizer = SimpleNormalizer()
+        val tokenizers = TokenizersBuilder.build()
         val stopLists = StopListsBuilder.build()
         val lexicons = LexiconsBuilder.build()
-        buildIndexer(normalizer, stopLists, lexicons)
+        val stemmers = SimpleStemmersBuilder.build()
+        buildIndexer(tokenizers, stopLists, lexicons, stemmers)
     }
 
     private fun buildIndexer(
-        normalizer: SimpleNormalizer,
+        tokenizers: HashMap<Language, ITokenizer>,
         stopLists: HashMap<Language, Set<String>>,
-        lexicons: HashMap<Language, Set<String>>
+        lexicons: HashMap<Language, Set<String>>,
+        stemmers: HashMap<Language, IStemmer>
     ) {
-        val indexer = SimpleIndexer(SimpleTokenizer(normalizer), stopLists, lexicons)
+        val indexer = SimpleIndexer(tokenizers, stopLists, lexicons, stemmers)
         indexer.addFilesToIndexRecursively(documentsRoot)
     }
 }

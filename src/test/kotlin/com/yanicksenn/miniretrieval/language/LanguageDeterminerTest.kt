@@ -1,14 +1,10 @@
 package com.yanicksenn.miniretrieval.language
 
-import com.yanicksenn.miniretrieval.tokenizer.SimpleNormalizer
-import com.yanicksenn.miniretrieval.tokenizer.SimpleTokenizer
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class LanguageDeterminerTest {
 
-    private val normalizer = SimpleNormalizer()
-    private var tokenizer = SimpleTokenizer(normalizer)
     private var lexicons = LexiconsBuilder.build()
 
     @Test
@@ -23,7 +19,7 @@ class LanguageDeterminerTest {
         """
 
         val languageDeterminer = LanguageDeterminer(lexicons)
-        languageDeterminer.readTokens(tokenizer.tokenize(text))
+        languageDeterminer.readText(text)
 
         assertEquals(LanguageDeterminer.Match(hashSetOf(Language.ENGLISH)), languageDeterminer.currentLanguage)
     }
@@ -40,7 +36,7 @@ class LanguageDeterminerTest {
         """
 
         val languageDeterminer = LanguageDeterminer(lexicons)
-        languageDeterminer.readTokens(tokenizer.tokenize(text))
+        languageDeterminer.readText(text)
 
         assertEquals(LanguageDeterminer.Match(hashSetOf(Language.GERMAN)), languageDeterminer.currentLanguage)
     }

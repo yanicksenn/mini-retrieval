@@ -15,8 +15,6 @@ class IndexerIntegrationTest : AbstractIntegrationTest() {
         assertDoesNotThrow { runIntegrationTest(documentsDirectory.absolutePath) }
 
         out.lines()
-            .assertDocumentWasVisited("doc-1.txt")
-            .assertDocumentWasVisited("doc-2.txt")
             .assertDocumentWasVisited("doc-3.txt")
             .assertDocumentWasVisited("doc-4.txt")
     }
