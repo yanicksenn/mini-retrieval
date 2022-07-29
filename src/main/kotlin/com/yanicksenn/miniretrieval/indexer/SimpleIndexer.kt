@@ -70,6 +70,7 @@ class SimpleIndexer(
                     tokenizer.tokenize(text)
                         .map { stemmer.stem(it) }
                         .filterNot { stopList.contains(it) }
+                        .flatMap { listOf(it, it.replace("".toRegex(), "")) }
                         .forEach { addToIndices(Document(file.absolutePath), it) }
                 }
             }
