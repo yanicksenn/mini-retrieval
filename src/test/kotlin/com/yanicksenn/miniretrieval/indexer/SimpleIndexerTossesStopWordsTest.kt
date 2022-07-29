@@ -14,7 +14,7 @@ class SimpleIndexerTossesStopWordsTest {
 
     @Test
     fun `ensure stop-words are tossed from the indices`() {
-        val indexer = SimpleIndexer(SimpleTokenizer(SimpleNormalizer()), StopListsBuilder.build(), LexiconsBuilder.build(), SimpleStemmersBuilder.build())
+        val indexer = SimpleIndexer(SimpleTokenizer(), StopListsBuilder.build(), LexiconsBuilder.build(), SimpleStemmersBuilder.build())
         val documentsRoot = File("src/test/resources/documents")
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }

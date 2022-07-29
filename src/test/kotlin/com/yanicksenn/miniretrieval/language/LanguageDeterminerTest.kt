@@ -7,8 +7,7 @@ import kotlin.test.assertEquals
 
 class LanguageDeterminerTest {
 
-    private val normalizer = SimpleNormalizer()
-    private var tokenizer = SimpleTokenizer(normalizer)
+    private var tokenizer = SimpleTokenizer()
     private var lexicons = LexiconsBuilder.build()
 
     @Test

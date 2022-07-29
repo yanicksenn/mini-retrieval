@@ -21,7 +21,7 @@ class SimpleIndexerTest {
 
     @BeforeEach
     fun beforeEach() {
-        indexer = SimpleIndexer(SimpleTokenizer(SimpleNormalizer()), StopListsBuilder.build(), LexiconsBuilder.build(), SimpleStemmersBuilder.build())
+        indexer = SimpleIndexer(SimpleTokenizer(), StopListsBuilder.build(), LexiconsBuilder.build(), SimpleStemmersBuilder.build())
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
     }

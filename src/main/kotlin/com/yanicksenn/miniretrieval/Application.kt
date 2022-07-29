@@ -30,7 +30,7 @@ class Application(
         lexicons: HashMap<Language, Set<String>>,
         stemmers: HashMap<Language, IStemmer>
     ) {
-        val indexer = SimpleIndexer(SimpleTokenizer(normalizer), stopLists, lexicons, stemmers)
+        val indexer = SimpleIndexer(SimpleTokenizer(), stopLists, lexicons, stemmers)
         indexer.addFilesToIndexRecursively(documentsRoot)
     }
 }
