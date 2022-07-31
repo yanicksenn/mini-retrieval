@@ -10,15 +10,14 @@ import kotlin.test.assertTrue
 
 class TokenFrequencyIndexerTest {
 
-    private val documentsRoot = File("src/test/resources/documents")
-
     private lateinit var indexer: TokenFrequencyIndexer
 
     @BeforeEach
     fun beforeEach() {
         indexer = TokenFrequencyIndexerBuilder.build()
+        val file = File("src/test/resources/documents/google.txt")
 
-        assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
+        assertDoesNotThrow { indexer.addFileToIndex(file) }
     }
 
     @Test

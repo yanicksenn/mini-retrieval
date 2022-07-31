@@ -19,12 +19,12 @@ class TokenFrequencyIndexer(
 
     private val stemmedStopLists = HashMap<Language, HashSet<String>>()
 
-    private val documents = HashMap<Document, Document>()
+    private val documents = HashMap<String, String>()
     private val tokens = HashMap<String, String>()
 
-    private val tokensByDocumentIndex = HashMap<Document, HashMap<String, Int>>()
-    private val documentsByTokenIndex = HashMap<String, HashMap<Document, Int>>()
-    private val languageByDocumentIndex = HashMap<Document, HashSet<Language>>()
+    private val tokensByDocumentIndex = HashMap<String, HashMap<String, Int>>()
+    private val documentsByTokenIndex = HashMap<String, HashMap<String, Int>>()
+    private val languageByDocumentIndex = HashMap<String, HashSet<Language>>()
 
     init {
         stopLists.keys.forEach { language ->
@@ -42,7 +42,7 @@ class TokenFrequencyIndexer(
      * occurrences within a document.
      * @param document Document
      */
-    fun findTokensByDocument(document: Document): Map<String, Int> {
+    fun findTokensByDocument(document: String): Map<String, Int> {
         return tokensByDocumentIndex[document] ?: emptyMap()
     }
 
@@ -51,7 +51,7 @@ class TokenFrequencyIndexer(
      * occurrences with a certain token.
      * @param token Token
      */
-    fun findDocumentsByToken(token: String): Map<Document, Int> {
+    fun findDocumentsByToken(token: String): Map<String, Int> {
         return documentsByTokenIndex[token] ?: emptyMap()
     }
 
@@ -59,7 +59,7 @@ class TokenFrequencyIndexer(
      * Returns all documents that were considered during
      * the generation of the index.
      */
-    fun indexedDocuments(): Set<Document> {
+    fun indexedDocuments(): Set<String> {
         return documents.keys
     }
 
@@ -99,7 +99,7 @@ class TokenFrequencyIndexer(
                         .map { stemmer.stem(it) }
                         .filterNot { stopList.contains(it) }
                         .flatMap { listOf(it, it.replace("".toRegex(), "")) }
-                        .forEach { addToIndices(Document(file.absolutePath), it, language) }
+                        .forEach { addToIndices(file.absolutePath, it, language) }
                 }
             }
         }
@@ -111,7 +111,7 @@ class TokenFrequencyIndexer(
         return languageDeterminer.currentLanguage
     }
 
-    private fun addToIndices(document: Document, token: String, language: Language) {
+    private fun addToIndices(document: String, token: String, language: Language) {
         val tokens = tokensByDocumentIndex.getOrPut(document) { HashMap() }
         tokens[token] = tokens.getOrDefault(token, 0) + 1
 

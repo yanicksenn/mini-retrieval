@@ -10,13 +10,13 @@ class TokenFrequencyIndexerTossesStopWordsTest {
     @Test
     fun `ensure stop-words are tossed from the indices`() {
         val indexer = TokenFrequencyIndexerBuilder.build()
-        val documentsRoot = File("src/test/resources/documents")
-
-        assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
+        val file = File("src/test/resources/documents/google.txt")
+        assertDoesNotThrow { indexer.addFileToIndex(file) }
 
         indexer
-            .assertDoesNotContainToken("the")
-            .assertDoesNotContainToken("as")
+            .assertDoesNotContainToken("search")
+            .assertDoesNotContainToken("hassan")
+            .assertDoesNotContainToken("page")
     }
 
     private fun TokenFrequencyIndexer.assertDoesNotContainToken(token: String): TokenFrequencyIndexer {
