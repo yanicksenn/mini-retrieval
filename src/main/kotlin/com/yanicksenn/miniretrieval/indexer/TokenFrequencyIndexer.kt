@@ -17,9 +17,6 @@ class TokenFrequencyIndexer(
     private val lexicons: Map<Language, Set<String>>,
     private val stemmers: Map<Language, IStemmer>) {
 
-    private val documents = HashMap<String, String>()
-    private val tokens = HashMap<String, String>()
-
     private val tokensByDocumentIndex = HashMap<String, HashMap<String, Int>>()
     private val documentsByTokenIndex = HashMap<String, HashMap<String, Int>>()
 
@@ -46,7 +43,7 @@ class TokenFrequencyIndexer(
      * the generation of the index.
      */
     fun indexedDocuments(): Set<String> {
-        return documents.keys
+        return tokensByDocumentIndex.keys
     }
 
     /**
@@ -54,7 +51,7 @@ class TokenFrequencyIndexer(
      * generation oof the index.
      */
     fun indexedTokens(): Set<String> {
-        return tokens.keys
+        return documentsByTokenIndex.keys
     }
 
     /**

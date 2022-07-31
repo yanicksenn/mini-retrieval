@@ -14,9 +14,9 @@ class TokenFrequencyIndexerTossesStopWordsTest {
         assertDoesNotThrow { indexer.addDocumentToIndex(file.absolutePath, file.readText()) }
 
         indexer
-            .assertDoesNotContainToken("search")
-            .assertDoesNotContainToken("hassan")
-            .assertDoesNotContainToken("page")
+            .assertDoesNotContainToken("as")
+            .assertDoesNotContainToken("and")
+            .assertDoesNotContainToken("the")
     }
 
     private fun TokenFrequencyIndexer.assertDoesNotContainToken(token: String): TokenFrequencyIndexer {
