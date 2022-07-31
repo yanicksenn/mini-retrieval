@@ -1,11 +1,11 @@
-package com.yanicksenn.miniretrieval.stoplist
+package com.yanicksenn.miniretrieval.utility
 
 import java.io.InputStream
 
 /**
- * Parser for stop lists.
+ * Parser for files that contains tokens per line.
  */
-open class StopListParser(private val stopListInputStream: InputStream) {
+open class TokenFileParser(private val tokenFileParser: InputStream) {
 
     companion object {
         /**
@@ -16,11 +16,11 @@ open class StopListParser(private val stopListInputStream: InputStream) {
         private val COMMENTS_REGEX = "^\\s*#.*".toRegex()
     }
 
-    private var stopList: HashSet<String>? = null
+    private var tokens: HashSet<String>? = null
 
     open fun parse(): Set<String> {
-        if (stopList == null) {
-            stopList = stopListInputStream.bufferedReader()
+        if (tokens == null) {
+            tokens = tokenFileParser.bufferedReader()
                 .lineSequence()
                 .filterNot { it.matches(COMMENTS_REGEX) }
                 .filterNot { it.isBlank() }
@@ -28,6 +28,6 @@ open class StopListParser(private val stopListInputStream: InputStream) {
                 .toHashSet()
         }
 
-        return stopList!!
+        return tokens!!
     }
 }

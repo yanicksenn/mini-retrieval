@@ -1,4 +1,6 @@
 package com.yanicksenn.miniretrieval.language
 
-class GermanLexiconParser : LexiconParser(
+import com.yanicksenn.miniretrieval.utility.TokenFileParser
+
+class GermanLexiconParser : TokenFileParser(
     javaClass.getResourceAsStream("/lexicons/german.txt")!!)

@@ -1,4 +1,4 @@
-package com.yanicksenn.miniretrieval.stoplist
+package com.yanicksenn.miniretrieval.utility
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
@@ -6,16 +6,16 @@ import java.io.InputStream
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class StopListParserTest {
+class TokenFileParserTest {
 
     @Test
-    fun `ensure parsing stop-list contains the correct tokens`() {
+    fun `ensure parsing token file contains the correct tokens`() {
         val stopListFile = createInputStreamWithLines(
             "this",
             "that",
             "them")
 
-        StopListParser(stopListFile).parse()
+        TokenFileParser(stopListFile).parse()
             .assertContainsToken("this")
             .assertContainsToken("that")
             .assertContainsToken("them")
@@ -29,7 +29,7 @@ class StopListParserTest {
             "that",
             "# them")
 
-        StopListParser(stopListFile).parse()
+        TokenFileParser(stopListFile).parse()
             .assertDoesNotContainToken("this")
             .assertContainsToken("that")
             .assertDoesNotContainToken("them")
@@ -44,7 +44,7 @@ class StopListParserTest {
             "   ",
             "them")
 
-        StopListParser(stopListFile).parse()
+        TokenFileParser(stopListFile).parse()
             .assertContainsToken("this")
             .assertContainsToken("them")
             .assertSize(2)
@@ -57,7 +57,7 @@ class StopListParserTest {
             "that ",
             " them")
 
-        StopListParser(stopListFile).parse()
+        TokenFileParser(stopListFile).parse()
             .assertContainsToken("this")
             .assertContainsToken("that")
             .assertContainsToken("them")
