@@ -7,6 +7,6 @@ class SimpleIndexerBuilderTest {
 
     @Test
     fun `ensure simple indexer builder works`() {
-        assertDoesNotThrow { SimpleIndexerBuilder.build() }
+        assertDoesNotThrow { SimpleTokenFrequencyIndexerBuilder.build() }
     }
 }

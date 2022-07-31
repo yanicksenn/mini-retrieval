@@ -12,11 +12,11 @@ class SimpleIndexerTest {
 
     private val documentsRoot = File("src/test/resources/documents")
 
-    private lateinit var indexer: IIndexer
+    private lateinit var indexer: ITokenFrequencyIndexer
 
     @BeforeEach
     fun beforeEach() {
-        indexer = SimpleIndexerBuilder.build()
+        indexer = SimpleTokenFrequencyIndexerBuilder.build()
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
     }

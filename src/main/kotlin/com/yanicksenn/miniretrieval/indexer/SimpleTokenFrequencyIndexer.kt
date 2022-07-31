@@ -9,11 +9,11 @@ import java.io.File
 /**
  * Simple implementation of the indexer API using term frequency.
  */
-class SimpleIndexer(
+class SimpleTokenFrequencyIndexer(
     private val tokenizers: Map<Language, ITokenizer>,
     private val stopLists: Map<Language, Set<String>>,
     private val lexicons: Map<Language, Set<String>>,
-    private val stemmers: Map<Language, IStemmer>) : IIndexer {
+    private val stemmers: Map<Language, IStemmer>) : ITokenFrequencyIndexer {
 
     private val stemmedStopLists = HashMap<Language, HashSet<String>>()
 

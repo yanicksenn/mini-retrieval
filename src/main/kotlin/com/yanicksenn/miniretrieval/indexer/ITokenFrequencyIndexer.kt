@@ -3,9 +3,9 @@ package com.yanicksenn.miniretrieval.indexer
 import java.io.File
 
 /**
- * API for an indexer.
+ * API for an token frequency indexer.
  */
-interface IIndexer {
+interface ITokenFrequencyIndexer {
 
     /**
      * Returns the tokens paired with the amount of
