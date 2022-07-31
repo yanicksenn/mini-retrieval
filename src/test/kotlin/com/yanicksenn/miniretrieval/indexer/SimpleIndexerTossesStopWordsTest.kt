@@ -19,7 +19,7 @@ class SimpleIndexerTossesStopWordsTest {
             .assertDoesNotContainToken("as")
     }
 
-    private fun ITokenFrequencyIndexer.assertDoesNotContainToken(token: String): ITokenFrequencyIndexer {
+    private fun SimpleTokenFrequencyIndexer.assertDoesNotContainToken(token: String): SimpleTokenFrequencyIndexer {
         assertFalse(indexedTokens().contains(token), "token $token should not be indexed")
         return this
     }

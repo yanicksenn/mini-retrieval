@@ -15,7 +15,7 @@ class SimpleTokenFrequencyIndexer(
     private val tokenizers: Map<Language, ITokenizer>,
     private val stopLists: Map<Language, Set<String>>,
     private val lexicons: Map<Language, Set<String>>,
-    private val stemmers: Map<Language, IStemmer>) : ITokenFrequencyIndexer {
+    private val stemmers: Map<Language, IStemmer>) {
 
     private val stemmedStopLists = HashMap<Language, HashSet<String>>()
 
@@ -69,6 +69,17 @@ class SimpleTokenFrequencyIndexer(
      */
     fun indexedTokens(): Set<String> {
         return tokens.keys
+    }
+
+    /**
+     * Reads, tokenizes and then adds all files
+     * recursively to the indices.
+     * @param file File
+     */
+    fun addFilesToIndexRecursively(file: File) {
+        file.walk()
+            .filter { it.isFile }
+            .forEach { addFileToIndex(it) }
     }
 
     /**

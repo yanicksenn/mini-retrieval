@@ -12,7 +12,7 @@ class SimpleIndexerTest {
 
     private val documentsRoot = File("src/test/resources/documents")
 
-    private lateinit var indexer: ITokenFrequencyIndexer
+    private lateinit var indexer: SimpleTokenFrequencyIndexer
 
     @BeforeEach
     fun beforeEach() {
