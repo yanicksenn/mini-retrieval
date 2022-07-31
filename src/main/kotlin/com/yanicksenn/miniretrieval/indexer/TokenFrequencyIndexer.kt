@@ -17,25 +17,12 @@ class TokenFrequencyIndexer(
     private val lexicons: Map<Language, Set<String>>,
     private val stemmers: Map<Language, IStemmer>) {
 
-    private val stemmedStopLists = HashMap<Language, HashSet<String>>()
-
     private val documents = HashMap<String, String>()
     private val tokens = HashMap<String, String>()
 
     private val tokensByDocumentIndex = HashMap<String, HashMap<String, Int>>()
     private val documentsByTokenIndex = HashMap<String, HashMap<String, Int>>()
     private val languageByDocumentIndex = HashMap<String, HashSet<Language>>()
-
-    init {
-        stopLists.keys.forEach { language ->
-            val stemmer = stemmers[language]!!
-            val stopList = stopLists[language]!!
-
-            stemmedStopLists[language] = stopList.map { token ->
-                stemmer.stem(token)
-            }.toHashSet()
-        }
-    }
 
     /**
      * Returns the tokens paired with the amount of
@@ -83,7 +70,7 @@ class TokenFrequencyIndexer(
                 for (language in languages) {
                     val tokenizer = tokenizers[language]!!
                     val stemmer = stemmers[language]!!
-                    val stopList = stemmedStopLists[language]!!
+                    val stopList = stopLists[language]!!
 
                     tokenizer.tokenize(text.lowercase())
                         .map { stemmer.stem(it) }
