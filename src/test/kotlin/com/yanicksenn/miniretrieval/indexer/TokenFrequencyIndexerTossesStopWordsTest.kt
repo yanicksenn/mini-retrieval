@@ -5,11 +5,11 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import java.io.File
 import kotlin.test.assertFalse
 
-class SimpleIndexerTossesStopWordsTest {
+class TokenFrequencyIndexerTossesStopWordsTest {
 
     @Test
     fun `ensure stop-words are tossed from the indices`() {
-        val indexer = SimpleTokenFrequencyIndexerBuilder.build()
+        val indexer = TokenFrequencyIndexerBuilder.build()
         val documentsRoot = File("src/test/resources/documents")
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
@@ -19,7 +19,7 @@ class SimpleIndexerTossesStopWordsTest {
             .assertDoesNotContainToken("as")
     }
 
-    private fun SimpleTokenFrequencyIndexer.assertDoesNotContainToken(token: String): SimpleTokenFrequencyIndexer {
+    private fun TokenFrequencyIndexer.assertDoesNotContainToken(token: String): TokenFrequencyIndexer {
         assertFalse(indexedTokens().contains(token), "token $token should not be indexed")
         return this
     }

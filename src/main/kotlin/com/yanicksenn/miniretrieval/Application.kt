@@ -1,6 +1,6 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.indexer.SimpleTokenFrequencyIndexerBuilder
+import com.yanicksenn.miniretrieval.indexer.TokenFrequencyIndexerBuilder
 import java.io.File
 
 /**
@@ -10,7 +10,7 @@ class Application(
     private val documentsRoot: File) : Runnable {
 
     override fun run() {
-        val indexer = SimpleTokenFrequencyIndexerBuilder.build()
+        val indexer = TokenFrequencyIndexerBuilder.build()
         indexer.addFilesToIndexRecursively(documentsRoot)
     }
 }

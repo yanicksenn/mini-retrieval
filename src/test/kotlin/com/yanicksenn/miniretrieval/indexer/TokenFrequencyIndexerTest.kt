@@ -8,15 +8,15 @@ import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class SimpleIndexerTest {
+class TokenFrequencyIndexerTest {
 
     private val documentsRoot = File("src/test/resources/documents")
 
-    private lateinit var indexer: SimpleTokenFrequencyIndexer
+    private lateinit var indexer: TokenFrequencyIndexer
 
     @BeforeEach
     fun beforeEach() {
-        indexer = SimpleTokenFrequencyIndexerBuilder.build()
+        indexer = TokenFrequencyIndexerBuilder.build()
 
         assertDoesNotThrow { indexer.addFilesToIndexRecursively(documentsRoot) }
     }

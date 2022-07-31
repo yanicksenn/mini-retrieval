@@ -11,7 +11,7 @@ import java.io.File
  * by document, documents by token) based on tokens that
  * are retrieved from a document.
  */
-class SimpleTokenFrequencyIndexer(
+class TokenFrequencyIndexer(
     private val tokenizers: Map<Language, ITokenizer>,
     private val stopLists: Map<Language, Set<String>>,
     private val lexicons: Map<Language, Set<String>>,

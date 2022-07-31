@@ -5,9 +5,9 @@ import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
 import com.yanicksenn.miniretrieval.tokenizer.TokenizersBuilder
 
-object SimpleTokenFrequencyIndexerBuilder {
-    fun build(): SimpleTokenFrequencyIndexer {
-        return SimpleTokenFrequencyIndexer(
+object TokenFrequencyIndexerBuilder {
+    fun build(): TokenFrequencyIndexer {
+        return TokenFrequencyIndexer(
             TokenizersBuilder.build(),
             StopListsBuilder.build(),
             LexiconsBuilder.build(),
