@@ -11,6 +11,8 @@ class Application(
 
     override fun run() {
         val indexer = TokenFrequencyIndexerBuilder.build()
-        indexer.addFilesToIndexRecursively(documentsRoot)
+        documentsRoot.walk()
+            .filter { it.isFile }
+            .forEach { indexer.addFileToIndex(it) }
     }
 }
