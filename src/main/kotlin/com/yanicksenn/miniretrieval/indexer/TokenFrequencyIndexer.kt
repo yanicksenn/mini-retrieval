@@ -13,9 +13,9 @@ import java.io.File
  */
 class TokenFrequencyIndexer(
     private val tokenizers: Map<Language, ITokenizer>,
-    private val stopLists: Map<Language, Set<String>>,
     private val lexicons: Map<Language, Set<String>>,
-    private val stemmers: Map<Language, IStemmer>) {
+    private val stemmers: Map<Language, IStemmer>,
+    private val stopLists: Map<Language, Set<String>>) {
 
     private val tokensByDocumentIndex = HashMap<String, HashMap<String, Int>>()
     private val documentsByTokenIndex = HashMap<String, HashMap<String, Int>>()

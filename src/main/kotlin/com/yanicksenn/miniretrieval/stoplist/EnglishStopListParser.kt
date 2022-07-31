@@ -1,4 +1,6 @@
 package com.yanicksenn.miniretrieval.stoplist
 
-class EnglishStopListParser : StopListParser(
-    javaClass.getResourceAsStream("/stoplists/english.txt")!!)
+import com.yanicksenn.miniretrieval.stemmer.IStemmer
+
+class EnglishStopListParser(stemmer: IStemmer) : StemmedStopListParser(
+    javaClass.getResourceAsStream("/stoplists/english.txt")!!, stemmer)

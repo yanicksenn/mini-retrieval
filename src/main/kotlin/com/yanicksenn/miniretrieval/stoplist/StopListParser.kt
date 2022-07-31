@@ -18,7 +18,7 @@ open class StopListParser(private val stopListInputStream: InputStream) {
 
     private var stopList: HashSet<String>? = null
 
-    fun parse(): Set<String> {
+    open fun parse(): Set<String> {
         if (stopList == null) {
             stopList = stopListInputStream.bufferedReader()
                 .lineSequence()
