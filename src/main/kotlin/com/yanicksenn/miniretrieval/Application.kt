@@ -22,10 +22,8 @@ class Application(
         val stemmers = StemmersBuilder.build()
 
         val stemmedStopLists = HashMap<Language, HashSet<String>>()
-        stopLists.keys.forEach { language ->
+        stopLists.forEach { (language, stopList) ->
             val stemmer = stemmers[language]!!
-            val stopList = stopLists[language]!!
-
             stemmedStopLists[language] = stopList.map { token ->
                 stemmer.stem(token)
             }.toHashSet()
