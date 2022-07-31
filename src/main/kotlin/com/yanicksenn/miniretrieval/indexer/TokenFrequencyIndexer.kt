@@ -60,6 +60,7 @@ class TokenFrequencyIndexer(
     /**
      * Rokenizes and then adds this file the indices.
      * @param document Document
+     * @param text Text
      */
     fun addDocumentToIndex(document: String, text: String) {
         when (val languageResult = determineLanguage(text)) {
