@@ -31,16 +31,9 @@ class Application(
             }.toHashSet()
         }
 
-        val indexer = TokenFrequencyIndexer(
-            tokenizers,
-            stemmedStopLists,
-            lexicons,
-            stemmers
-        )
-
+        val indexer = TokenFrequencyIndexer(tokenizers, stemmedStopLists, lexicons, stemmers)
         documentsRoot.walk()
             .filter { it.isFile }
-            .map { it.absolutePath to it.readText() }
-            .forEach { indexer.addDocumentToIndex(it.first, it.second) }
+            .forEach { indexer.addDocumentToIndex(it.absolutePath, it.readText()) }
     }
 }
