@@ -16,8 +16,7 @@ class TokenFrequencyIndexerTest {
     fun beforeEach() {
         indexer = TokenFrequencyIndexerBuilder.build()
         val file = File("src/test/resources/documents/google.txt")
-
-        assertDoesNotThrow { indexer.addFileToIndex(file) }
+        assertDoesNotThrow { indexer.addDocumentToIndex(file.absolutePath, file.readText()) }
     }
 
     @Test

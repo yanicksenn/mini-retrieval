@@ -72,20 +72,10 @@ class TokenFrequencyIndexer(
     }
 
     /**
-     * Reads, tokenizes and then adds this file the
-     * indices.
-     * @param file File
-     * @throws IllegalArgumentException When file does not exist
-     * @throws IllegalArgumentException When file is not a file
+     * Rokenizes and then adds this file the indices.
+     * @param document Document
      */
-    fun addFileToIndex(file: File) {
-        require(file.exists()) { "${file.absolutePath} does not exist" }
-        require(file.isFile) { "${file.absolutePath} is not a file" }
-
-        println(file.absolutePath)
-
-        // O(n) parsing file and tokenize
-        val text = file.readText().lowercase()
+    fun addDocumentToIndex(document: String, text: String) {
         when (val languageResult = determineLanguage(text)) {
             is LanguageDeterminer.Nothing -> return
             is LanguageDeterminer.Match -> {
@@ -95,11 +85,10 @@ class TokenFrequencyIndexer(
                     val stemmer = stemmers[language]!!
                     val stopList = stemmedStopLists[language]!!
 
-                    tokenizer.tokenize(text)
+                    tokenizer.tokenize(text.lowercase())
                         .map { stemmer.stem(it) }
                         .filterNot { stopList.contains(it) }
-                        .flatMap { listOf(it, it.replace("".toRegex(), "")) }
-                        .forEach { addToIndices(file.absolutePath, it, language) }
+                        .forEach { addToIndices(document, it, language) }
                 }
             }
         }

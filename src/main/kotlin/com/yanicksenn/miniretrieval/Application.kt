@@ -13,6 +13,7 @@ class Application(
         val indexer = TokenFrequencyIndexerBuilder.build()
         documentsRoot.walk()
             .filter { it.isFile }
-            .forEach { indexer.addFileToIndex(it) }
+            .map { it.absolutePath to it.readText() }
+            .forEach { indexer.addDocumentToIndex(it.first, it.second) }
     }
 }
