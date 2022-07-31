@@ -74,7 +74,7 @@ class TokenFrequencyIndexer(
                     tokenizer.tokenize(text.lowercase())
                         .map { stemmer.stem(it) }
                         .filterNot { stopList.contains(it) }
-                        .forEach { addToIndices(document, it, language) }
+                        .forEach { addToIndices(document, it) }
                 }
             }
         }
@@ -86,7 +86,7 @@ class TokenFrequencyIndexer(
         return languageDeterminer.currentLanguage
     }
 
-    private fun addToIndices(document: String, token: String, language: Language) {
+    private fun addToIndices(document: String, token: String) {
         val tokens = tokensByDocumentIndex.getOrPut(document) { HashMap() }
         tokens[token] = tokens.getOrDefault(token, 0) + 1
 
