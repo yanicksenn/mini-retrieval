@@ -22,7 +22,6 @@ class TokenFrequencyIndexer(
 
     private val tokensByDocumentIndex = HashMap<String, HashMap<String, Int>>()
     private val documentsByTokenIndex = HashMap<String, HashMap<String, Int>>()
-    private val languageByDocumentIndex = HashMap<String, HashSet<Language>>()
 
     /**
      * Returns the tokens paired with the amount of
@@ -93,8 +92,5 @@ class TokenFrequencyIndexer(
 
         val documents = documentsByTokenIndex.getOrPut(token) { HashMap() }
         documents[document] = documents.getOrDefault(document, 0) + 1
-
-        val languages = languageByDocumentIndex.getOrPut(document) { HashSet() }
-        languages.add(language)
     }
 }
