@@ -7,7 +7,9 @@ import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import java.io.File
 
 /**
- * Simple implementation of the indexer API using term frequency.
+ * A token frequency indexer builds two indices (tokens
+ * by document, documents by token) based on tokens that
+ * are retrieved from a document.
  */
 class SimpleTokenFrequencyIndexer(
     private val tokenizers: Map<Language, ITokenizer>,
@@ -35,23 +37,48 @@ class SimpleTokenFrequencyIndexer(
         }
     }
 
-    override fun findTokensByDocument(document: Document): Map<String, Int> {
+    /**
+     * Returns the tokens paired with the amount of
+     * occurrences within a document.
+     * @param document Document
+     */
+    fun findTokensByDocument(document: Document): Map<String, Int> {
         return tokensByDocumentIndex[document] ?: emptyMap()
     }
 
-    override fun findDocumentsByToken(token: String): Map<Document, Int> {
+    /**
+     * Returns the documents paired with the amount of
+     * occurrences with a certain token.
+     * @param token Token
+     */
+    fun findDocumentsByToken(token: String): Map<Document, Int> {
         return documentsByTokenIndex[token] ?: emptyMap()
     }
 
-    override fun indexedDocuments(): Set<Document> {
+    /**
+     * Returns all documents that were considered during
+     * the generation of the index.
+     */
+    fun indexedDocuments(): Set<Document> {
         return documents.keys
     }
 
-    override fun indexedTokens(): Set<String> {
+    /**
+     * Returns all tokens that were found during the
+     * generation oof the index.
+     */
+    fun indexedTokens(): Set<String> {
         return tokens.keys
     }
 
-    override fun addFileToIndex(file: File) {
+    /**
+     * Reads, tokenizes and then adds this file the
+     * indices.
+     * @param file File
+     * @throws IllegalArgumentException When file does not exist
+     * @throws IllegalArgumentException When file is not a file
+     */
+    fun addFileToIndex(file: File) {
         require(file.exists()) { "${file.absolutePath} does not exist" }
         require(file.isFile) { "${file.absolutePath} is not a file" }
 
