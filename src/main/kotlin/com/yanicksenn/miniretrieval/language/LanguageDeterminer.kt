@@ -34,7 +34,7 @@ class LanguageDeterminer(lexicons: Map<Language, Set<String>>) {
      * Returns the percentage of matches with the currently
      * determined language.
      */
-     val currentAssurrance: Double
+     val currentAssurance: Double
         get() = if (tokensMatched > 0) currentMaxScore / tokensMatched.toDouble() else 0.0
 
     init {

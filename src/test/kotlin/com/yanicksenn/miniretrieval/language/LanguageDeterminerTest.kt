@@ -48,9 +48,9 @@ class LanguageDeterminerTest {
     }
 
     @Test
-    fun `ensure assurrance is zero when no tokens are read`() {
+    fun `ensure assurance is zero when no tokens are read`() {
         val languageDeterminer = LanguageDeterminer(lexicons)
-        assertEquals(0.0, languageDeterminer.currentAssurrance)
+        assertEquals(0.0, languageDeterminer.currentAssurance)
     }
 
     @Test
