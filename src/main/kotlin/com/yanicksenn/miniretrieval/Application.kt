@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.indexer.TokenFrequencyIndexer
+import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
 import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
@@ -19,7 +20,13 @@ class Application(
         val stemmers = StemmersBuilder.build()
         val stopLists = StopListsBuilder.build()
 
-        val indexer = TokenFrequencyIndexer(tokenizers, lexicons, stemmers, stopLists)
+        val stemmedStopLists = HashMap<Language, HashSet<String>>()
+        for ((language, stopList) in stopLists) {
+            val stemmer = stemmers[language]!!
+            stemmedStopLists[language] = stopList.map { stemmer.stem(it) }.toHashSet()
+        }
+
+        val indexer = TokenFrequencyIndexer(tokenizers, lexicons, stemmers, stemmedStopLists)
         documentsRoot.walk()
             .filter { it.isFile }
             .forEach { indexer.addDocumentToIndex(it.absolutePath, it.readText()) }
