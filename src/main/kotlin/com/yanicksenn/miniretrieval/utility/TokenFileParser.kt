@@ -18,6 +18,10 @@ open class TokenFileParser(private val tokenFileParser: InputStream) {
 
     private var tokens: HashSet<String>? = null
 
+    /**
+     * Parses the specified token file line by line
+     * and removes comments.
+     */
     open fun parse(): Set<String> {
         if (tokens == null) {
             tokens = tokenFileParser.bufferedReader()
