@@ -5,7 +5,7 @@ import java.io.InputStream
 /**
  * Parser for files that contains tokens per line.
  */
-open class TokenFileParser(private val tokenFileParser: InputStream) {
+open class TokenFileParser(private val tokenFileInputStream: InputStream) {
 
     companion object {
         /**
@@ -24,7 +24,7 @@ open class TokenFileParser(private val tokenFileParser: InputStream) {
      */
     open fun parse(): Set<String> {
         if (tokens == null) {
-            tokens = tokenFileParser.bufferedReader()
+            tokens = tokenFileInputStream.bufferedReader()
                 .lineSequence()
                 .filterNot { it.matches(COMMENTS_REGEX) }
                 .filterNot { it.isBlank() }
