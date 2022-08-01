@@ -1,6 +1,6 @@
 package com.yanicksenn.miniretrieval.stoplist
 
-import com.yanicksenn.miniretrieval.stemmer.IStemmer
+import com.yanicksenn.miniretrieval.utility.TokenFileParser
 
-class EnglishStopListParser(stemmer: IStemmer) : StemmedStopListParser(
-    javaClass.getResourceAsStream("/stoplists/english.txt")!!, stemmer)
+class EnglishStopListParser : TokenFileParser(
+    javaClass.getResourceAsStream("/stoplists/english.txt")!!)
