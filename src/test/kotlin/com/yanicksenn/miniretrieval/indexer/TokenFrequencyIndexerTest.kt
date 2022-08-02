@@ -1,5 +1,9 @@
 package com.yanicksenn.miniretrieval.indexer
 
+import com.yanicksenn.miniretrieval.language.LexiconsBuilder
+import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
+import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
+import com.yanicksenn.miniretrieval.tokenizer.TokenizersBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -14,7 +18,13 @@ class TokenFrequencyIndexerTest {
 
     @BeforeEach
     fun beforeEach() {
-        indexer = TokenFrequencyIndexerBuilder.build()
+        indexer = TokenFrequencyIndexer(
+            TokenizersBuilder.build(),
+            LexiconsBuilder.build(),
+            StemmersBuilder.build(),
+            StopListsBuilder.build()
+        )
+
         val file = File("src/test/resources/documents/google.txt")
         assertDoesNotThrow { indexer.addDocumentToIndex(file.absolutePath, file.readText()) }
     }
