@@ -22,7 +22,7 @@ open class TokenFileParser(private val tokenFileInputStream: InputStream) {
      * Parses the specified token file line by line
      * and removes comments.
      */
-    open fun parse(): Set<String> {
+    open fun parse(): HashSet<String> {
         if (tokens == null) {
             tokens = tokenFileInputStream.bufferedReader()
                 .lineSequence()
