@@ -4,8 +4,10 @@ import com.yanicksenn.miniretrieval.indexer.TokenFrequencyIndexer
 import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LanguageDeterminer
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
+import com.yanicksenn.miniretrieval.stemmer.IStemmer
 import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
+import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import com.yanicksenn.miniretrieval.tokenizer.WhitespaceTokenizer
 import java.io.File
 
@@ -14,30 +16,29 @@ import java.io.File
  */
 class TFIDF(private val documentsRoot: File) : Runnable {
 
-    override fun run() {
-        println("Initializing stemmers ...")
-        val stemmers = StemmersBuilder.build()
+    private val stemmers: HashMap<Language, IStemmer>
+    private val stopLists: HashMap<Language, HashSet<String>>
+    private val lexicons: HashMap<Language, HashSet<String>>
+    private val tokenizer: ITokenizer
 
-        println("Initializing stop-lists ...")
-        val stopLists = StopListsBuilder.build()
+    private val indexer: TokenFrequencyIndexer
 
-        println("Initializing tokenizer ...")
-        val tokenizer = WhitespaceTokenizer()
-
-        println("Initializing lexicons ...")
-        val lexicons = LexiconsBuilder.build()
-
-        println("Initializing indexer ...")
-        val indexer = TokenFrequencyIndexer()
-
+    init {
+        println("Initializing ...")
+        stemmers = StemmersBuilder.build()
+        tokenizer = WhitespaceTokenizer()
+        lexicons = LexiconsBuilder.build()
+        indexer = TokenFrequencyIndexer()
 
         println("Building stemmed stop-lists ...")
-        val stemmedStopLists = HashMap<Language, HashSet<String>>()
-        for ((language, stopList) in stopLists) {
+        stopLists = HashMap()
+        for ((language, stopList) in StopListsBuilder.build()) {
             val stemmer = stemmers[language]!!
-            stemmedStopLists[language] = stopList.map { stemmer.stem(it) }.toHashSet()
+            stopLists[language] = stopList.map { stemmer.stem(it) }.toHashSet()
         }
+    }
 
+    override fun run() {
         println("Indexing documents ...")
         documentsRoot.walk()
             .filter { it.isFile }
@@ -57,7 +58,7 @@ class TFIDF(private val documentsRoot: File) : Runnable {
                     is LanguageDeterminer.Match -> {
                         val language = result.language
                         val stemmer = stemmers[language] ?: return
-                        val stopList = stemmedStopLists[language] ?: return
+                        val stopList = stopLists[language] ?: return
 
                         tokens
                             .map { stemmer.stem(it) }
@@ -67,4 +68,6 @@ class TFIDF(private val documentsRoot: File) : Runnable {
                 }
             }
     }
+
+
 }
