@@ -32,6 +32,6 @@ open class TokenFileParser(private val tokenFileInputStream: InputStream) {
                 .toHashSet()
         }
 
-        return tokens!!
+        return HashSet(tokens!!)
     }
 }
