@@ -1,6 +1,5 @@
 package com.yanicksenn.miniretrieval.language
 
-import com.yanicksenn.miniretrieval.tokenizer.PreTokenizer
 import java.lang.Integer.max
 
 /**
@@ -11,7 +10,6 @@ class LanguageDeterminer(lexicons: Map<Language, Set<String>>) {
 
     private val languageByToken = HashMap<String, HashSet<Language>>()
     private val languageScore = HashMap<Language, Int>()
-    private val tokenizer = PreTokenizer()
 
     private var currentMaxScore = 0
     private var tokensRead = 0
@@ -26,7 +24,10 @@ class LanguageDeterminer(lexicons: Map<Language, Set<String>>) {
                 return Nothing
 
             val bestMatches = languageScore.filter { it.value == currentMaxScore }.keys.toHashSet()
-            return Match(bestMatches)
+            if (bestMatches.size > 1)
+                return Nothing
+
+            return Match(bestMatches.first())
         }
 
 
@@ -45,16 +46,6 @@ class LanguageDeterminer(lexicons: Map<Language, Set<String>>) {
 
         // Initialize score for each language in the lexicons
         lexicons.keys.forEach { languageScore[it] = 0 }
-    }
-
-    /**
-     * Pre-tokenizes the given text and read each token and
-     * adjusts the language score to determine what language
-     * matches this document.
-     * @param text Text
-     */
-    fun readText(text: String) {
-        tokenizer.tokenize(text).forEach { readToken(it) }
     }
 
     /**
@@ -92,8 +83,8 @@ class LanguageDeterminer(lexicons: Map<Language, Set<String>>) {
     object Nothing : Result
 
     /**
-     * When at least one language is matched.
+     * When a language is matched.
      */
-    data class Match(val languages: Set<Language>) : Result
+    data class Match(val language: Language) : Result
 
 }

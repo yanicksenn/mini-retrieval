@@ -1,10 +1,12 @@
 package com.yanicksenn.miniretrieval.language
 
+import com.yanicksenn.miniretrieval.tokenizer.WhitespaceTokenizer
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class LanguageDeterminerTest {
 
+    private val tokenizer = WhitespaceTokenizer()
     private var lexicons = LexiconsBuilder.build()
 
     @Test
@@ -18,10 +20,11 @@ class LanguageDeterminerTest {
             pictures or conversation?'
         """
 
+        val tokens = tokenizer.tokenize(text)
         val languageDeterminer = LanguageDeterminer(lexicons)
-        languageDeterminer.readText(text)
+        tokens.forEach { languageDeterminer.readToken(it.lowercase()) }
 
-        assertEquals(LanguageDeterminer.Match(hashSetOf(Language.ENGLISH)), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(Language.ENGLISH), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -35,10 +38,11 @@ class LanguageDeterminerTest {
             Gespräche?“
         """
 
+        val tokens = tokenizer.tokenize(text)
         val languageDeterminer = LanguageDeterminer(lexicons)
-        languageDeterminer.readText(text)
+        tokens.forEach { languageDeterminer.readToken(it.lowercase()) }
 
-        assertEquals(LanguageDeterminer.Match(hashSetOf(Language.GERMAN)), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(Language.GERMAN), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -64,7 +68,7 @@ class LanguageDeterminerTest {
     }
 
     @Test
-    fun `ensure multiple languages are returned when there is no clear language`() {
+    fun `ensure nothing is returned when language is not clearly definable`() {
         val languageDeterminer = LanguageDeterminer(lexicons)
 
         languageDeterminer.readToken("ich")
@@ -73,6 +77,6 @@ class LanguageDeterminerTest {
         languageDeterminer.readToken("i")
         languageDeterminer.readToken("you")
 
-        assertEquals(LanguageDeterminer.Match(hashSetOf(Language.ENGLISH, Language.GERMAN)), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Nothing, languageDeterminer.currentLanguage)
     }
 }
