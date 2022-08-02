@@ -16,22 +16,36 @@ class Application(
     private val documentsRoot: File) : Runnable {
 
     override fun run() {
+        println("Initializing stemmers ...")
         val stemmers = StemmersBuilder.build()
+
+        println("Initializing stop-lists ...")
         val stopLists = StopListsBuilder.build()
 
+        println("Initializing tokenizer ...")
+        val tokenizer = WhitespaceTokenizer()
+
+        println("Initializing lexicons ...")
+        val lexicons = LexiconsBuilder.build()
+
+        println("Initializing indexer ...")
+        val indexer = TokenFrequencyIndexer()
+
+
+        println("Building stemmed stop-lists ...")
         val stemmedStopLists = HashMap<Language, HashSet<String>>()
         for ((language, stopList) in stopLists) {
             val stemmer = stemmers[language]!!
             stemmedStopLists[language] = stopList.map { stemmer.stem(it) }.toHashSet()
         }
 
-        val tokenizer = WhitespaceTokenizer()
-        val lexicons = LexiconsBuilder.build()
-        val indexer = TokenFrequencyIndexer()
-
+        println("Indexing documents ...")
         documentsRoot.walk()
             .filter { it.isFile }
             .forEach { file ->
+                val name = file.absolutePath
+                println("\tIndexing $name ...")
+
                 val text = file.readText()
                 val tokens = tokenizer.tokenize(text)
                 val languageDeterminer = LanguageDeterminer(lexicons)
@@ -49,7 +63,7 @@ class Application(
                         tokens
                             .map { stemmer.stem(it) }
                             .filterNot { stopList.contains(it) }
-                            .forEach { indexer.addToIndices(file.absolutePath, it) }
+                            .forEach { indexer.addToIndices(name, it) }
                     }
                 }
             }
