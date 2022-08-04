@@ -6,16 +6,17 @@ package com.yanicksenn.miniretrieval.indexer
  * are retrieved from a document.
  */
 class TokenFrequencyIndexer {
-    private val tokensByDocumentIndex = HashMap<String, FrequencyIndexer<String>>()
+    private val tokensByDocumentIndex = HashMap<String, HashSet<String>>()
     private val documentsByTokenIndex = HashMap<String, HashSet<String>>()
+    private val frequencies = FrequencyIndexer<Pair<String, String>>()
 
     /**
      * Returns all tokens paired with the amount of
      * occurrences within the given document.
      * @param document Document
      */
-    fun findTokensByDocument(document: String): FrequencyIndexer<String> {
-        return tokensByDocumentIndex[document] ?: FrequencyIndexer()
+    fun findTokensByDocument(document: String): Set<String> {
+        return tokensByDocumentIndex[document] ?: emptySet()
     }
 
     /**
@@ -25,6 +26,15 @@ class TokenFrequencyIndexer {
      */
     fun findDocumentsByToken(token: String): Set<String> {
         return documentsByTokenIndex[token] ?: emptySet()
+    }
+
+    /**
+     * Returns the frequency of the given token within
+     * the given token. If it does not exist then zero
+     * is returned.
+     */
+    fun findFrequency(document: String, token: String): Int {
+        return frequencies[Pair(document, token)] ?: 0
     }
 
     /**
@@ -44,26 +54,19 @@ class TokenFrequencyIndexer {
     }
 
     /**
-     * Adds all given document-tokens combinations to the
-     * indices.
-     * @param document Document
-     * @param tokens Tokens
-     */
-    fun addAllToIndices(document: String, tokens: List<String>) {
-        tokens.forEach { addToIndices(document, it) }
-    }
-
-    /**
      * Adds the given document-token combination to the
      * indices.
      * @param document Document
      * @param token Token
      */
     fun addToIndices(document: String, token: String) {
-        val tokens = tokensByDocumentIndex.getOrPut(document) { FrequencyIndexer() }
-        tokens.addToIndex(token)
+        val tokens = tokensByDocumentIndex.getOrPut(document) { HashSet() }
+        tokens.add(token)
 
         val documents = documentsByTokenIndex.getOrPut(token) { HashSet() }
         documents.add(document)
+
+        val key = document to token
+        frequencies.addToIndex(key)
     }
 }

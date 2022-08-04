@@ -37,89 +37,70 @@ class TokenFrequencyIndexerTest {
         assertTrue(indexer.indexedDocuments().contains("doc1.txt"))
     }
 
-
     @Test
-    fun `should contain no occurrence of token in document`() {
-        val tokensByDocument = indexer.findTokensByDocument("doc1.txt")
-        assertEquals(0, tokensByDocument.size)
+    fun `should not find tokens for unknown document`() {
+        assertEquals(emptySet(), indexer.findTokensByDocument("doc1.txt"))
     }
 
     @Test
-    fun `should contain exactly one occurrence of token in document`() {
-        indexer.addToIndices("doc1.txt", "hello")
-
-        val tokensByDocument = indexer.findTokensByDocument("doc1.txt")
-        assertEquals(1, tokensByDocument["hello"])
-    }
-
-    @Test
-    fun `should contain exactly n occurrences of token in document`() {
-        indexer.addToIndices("doc1.txt", "hello")
-        indexer.addToIndices("doc1.txt", "hello")
-        indexer.addToIndices("doc1.txt", "hello")
-
-        val tokensByDocument = indexer.findTokensByDocument("doc1.txt")
-        assertEquals(3, tokensByDocument["hello"])
-    }
-
-
-    @Test
-    fun `should not contain document with token`() {
-        val documentsByToken = indexer.findDocumentsByToken("hello")
-        assertEquals(0, documentsByToken.size)
-    }
-
-    @Test
-    fun `should contain document with token`() {
-        indexer.addToIndices("doc1.txt", "hello")
-
-        val documentsByToken = indexer.findDocumentsByToken("hello")
-        assertTrue(documentsByToken.contains("doc1.txt"))
-    }
-
-    @Test
-    fun `should not sum up same token in different documents`() {
+    fun `should find tokens for document`() {
         indexer.addToIndices("doc1.txt", "hello")
         indexer.addToIndices("doc1.txt", "world")
         indexer.addToIndices("doc2.txt", "hello")
         indexer.addToIndices("doc2.txt", "there")
 
-        val tokensDoc1 = indexer.findTokensByDocument("doc1.txt")
-        assertEquals(1, tokensDoc1["hello"])
-        assertEquals(1, tokensDoc1["world"])
-
-        val tokensDoc2 = indexer.findTokensByDocument("doc2.txt")
-        assertEquals(1, tokensDoc2["hello"])
-        assertEquals(1, tokensDoc2["there"])
+        val tokens = indexer.findTokensByDocument("doc1.txt")
+        assertEquals(setOf("hello", "world"), tokens)
     }
 
     @Test
-    fun `should find all document with same token`() {
+    fun `should find no frequency for token in document`() {
+        indexer.addToIndices("doc1.txt", "hello")
+        assertEquals(0, indexer.findFrequency("doc2.txt", "world"))
+    }
+
+    @Test
+    fun `should find frequency for token in document`() {
+        indexer.addToIndices("doc1.txt", "hello")
+        assertEquals(1, indexer.findFrequency("doc1.txt", "hello"))
+    }
+
+    @Test
+    fun `should find summed up frequency for same token in document`() {
+        indexer.addToIndices("doc1.txt", "hello")
+        indexer.addToIndices("doc1.txt", "hello")
+        indexer.addToIndices("doc1.txt", "hello")
+        assertEquals(3, indexer.findFrequency("doc1.txt", "hello"))
+    }
+
+    @Test
+    fun `should not find summed up frequency for same token in different documents`() {
         indexer.addToIndices("doc1.txt", "hello")
         indexer.addToIndices("doc1.txt", "world")
         indexer.addToIndices("doc2.txt", "hello")
         indexer.addToIndices("doc2.txt", "there")
-        indexer.addToIndices("doc3.txt", "goodbye")
 
-        val documentsHello = indexer.findDocumentsByToken("hello")
-        assertTrue(documentsHello.contains("doc1.txt"))
-        assertTrue(documentsHello.contains("doc2.txt"))
-        assertFalse(documentsHello.contains("doc3.txt"))
+        assertEquals(1, indexer.findFrequency("doc1.txt", "hello"))
+        assertEquals(1, indexer.findFrequency("doc1.txt", "world"))
+
+        assertEquals(1, indexer.findFrequency("doc2.txt", "hello"))
+        assertEquals(1, indexer.findFrequency("doc2.txt", "there"))
     }
 
     @Test
-    fun `should find all tokens of document`() {
-        val tokens = "i am a software engineer who likes to engineer software".split(" ")
-        indexer.addAllToIndices("doc1.txt", tokens)
+    fun `should not find documents for unknown token`() {
+        val documents = indexer.findDocumentsByToken("hello")
+        assertEquals(0, documents.size)
+    }
 
-        val tokensByDocument = indexer.findTokensByDocument("doc1.txt")
-        assertEquals(1, tokensByDocument["i"])
-        assertEquals(1, tokensByDocument["am"])
-        assertEquals(1, tokensByDocument["a"])
-        assertEquals(2, tokensByDocument["software"])
-        assertEquals(2, tokensByDocument["engineer"])
-        assertEquals(1, tokensByDocument["who"])
-        assertEquals(1, tokensByDocument["likes"])
-        assertEquals(1, tokensByDocument["to"])
+    @Test
+    fun `should find documents for token`() {
+        indexer.addToIndices("doc1.txt", "hello")
+        indexer.addToIndices("doc1.txt", "world")
+        indexer.addToIndices("doc2.txt", "hello")
+        indexer.addToIndices("doc2.txt", "there")
+
+        val documents = indexer.findDocumentsByToken("hello")
+        assertEquals(setOf("doc1.txt", "doc2.txt"), documents)
     }
 }

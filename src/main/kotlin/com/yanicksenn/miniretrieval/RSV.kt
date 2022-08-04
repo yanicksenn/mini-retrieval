@@ -42,7 +42,7 @@ class RSV(
     }
 
     private fun TokenFrequencyIndexer.tf(document: String, token: String): Double {
-        return log10(1.0 + findTokensByDocument(document).getOrDefault(token, 0))
+        return log10(1.0 + findFrequency(document, token))
     }
 
     private fun FrequencyIndexer<String>.tf(token: String): Double {
@@ -55,7 +55,7 @@ class RSV(
 
     private fun dNorm(document: String): Double {
         val tokens = documentIndexer.findTokensByDocument(document)
-        return sqrt(tokens.keys.sumOf { pow2(a(document, it)) })
+        return sqrt(tokens.sumOf { pow2(a(document, it)) })
     }
 
     private fun qNorm(): Double {
