@@ -42,4 +42,8 @@ class StringFrequency : Map<String, Int> {
     override fun isEmpty(): Boolean {
         return frequencies.isEmpty()
     }
+
+    override fun toString(): String {
+        return frequencies.toString()
+    }
 }
