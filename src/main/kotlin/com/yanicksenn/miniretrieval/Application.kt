@@ -14,11 +14,17 @@ class Application(
         val tfidf = TFIDF(documentsRoot)
             .rebuildDocumentIndex()
 
+        println("Ready for querying ...")
+
         while (true) {
             val query = readln()
             val duration = measureTimeMillis {
-                tfidf.query(query)
-                    .forEach { println(it) }
+                val results = tfidf.query(query)
+                if (results.isEmpty()) {
+                    println("No results found")
+                } else {
+                    results.forEach { println(it) }
+                }
             }.milliseconds
 
             println("Querying took $duration")
