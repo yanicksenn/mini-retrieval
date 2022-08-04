@@ -31,8 +31,8 @@ class FrequencyIndexer<T> : Map<T, Int> {
 
     /**
      * Adds the given element to the index and if it
-     * was already contained then it increases the
-     * frequency.
+     * was already contained then its frequency will
+     * be increased.
      * @param element Element
      */
     fun addToIndex(element: T) {
