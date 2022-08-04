@@ -1,19 +1,19 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.indexer.FrequencyIndexer
+import com.yanicksenn.miniretrieval.indexer.Frequency
 import com.yanicksenn.miniretrieval.indexer.TokenFrequencyIndexer
 import kotlin.math.log10
 import kotlin.math.sqrt
 
 class RSV(
     private val documentIndexer: TokenFrequencyIndexer,
-    private val queryIndexer: FrequencyIndexer<String>
+    private val queryFrequency: Frequency<String>
 ) {
 
     fun query(): List<Result> {
         println("Accumulate documents ...")
         val accumulator = HashMap<String, Double>()
-        for (token in queryIndexer.keys) {
+        for (token in queryFrequency.keys) {
             if (!documentIndexer.indexedTokens().contains(token))
                 continue
 
@@ -45,7 +45,7 @@ class RSV(
         return log10(1.0 + findFrequency(document, token))
     }
 
-    private fun FrequencyIndexer<String>.tf(token: String): Double {
+    private fun Frequency<String>.tf(token: String): Double {
         return log10(1.0 + getOrDefault(token, 0))
     }
 
@@ -59,7 +59,7 @@ class RSV(
     }
 
     private fun qNorm(): Double {
-        return sqrt(queryIndexer.keys.sumOf { pow2(b(it)) })
+        return sqrt(queryFrequency.keys.sumOf { pow2(b(it)) })
     }
 
     private fun a(document: String, token: String): Double {
@@ -67,7 +67,7 @@ class RSV(
     }
 
     private fun b(token: String): Double {
-        return queryIndexer.tf(token) * documentIndexer.idf(token)
+        return queryFrequency.tf(token) * documentIndexer.idf(token)
     }
 
     private fun pow2(value: Double): Double {

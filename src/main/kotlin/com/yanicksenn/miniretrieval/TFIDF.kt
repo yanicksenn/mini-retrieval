@@ -1,6 +1,6 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.indexer.FrequencyIndexer
+import com.yanicksenn.miniretrieval.indexer.Frequency
 import com.yanicksenn.miniretrieval.indexer.TokenFrequencyIndexer
 import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LanguageDeterminer
@@ -66,11 +66,12 @@ class TFIDF(private val documentsRoot: File) {
      */
     fun query(query: String): List<RSV.Result> {
         println("Querying documents ...")
-        val queryIndexer = FrequencyIndexer<String>()
-        val tokens = tokenizeStemAndFilter(query)
-        queryIndexer.addAllToIndex(tokens)
 
-        return RSV(documentIndexer, queryIndexer).query()
+        val queryFrequency = Frequency<String>()
+        tokenizeStemAndFilter(query)
+            .forEach { queryFrequency.add(it) }
+
+        return RSV(documentIndexer, queryFrequency).query()
     }
 
     private fun indexFile(file: File) {

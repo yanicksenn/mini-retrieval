@@ -8,7 +8,7 @@ package com.yanicksenn.miniretrieval.indexer
 class TokenFrequencyIndexer {
     private val tokensByDocumentIndex = HashMap<String, HashSet<String>>()
     private val documentsByTokenIndex = HashMap<String, HashSet<String>>()
-    private val frequencies = FrequencyIndexer<Pair<String, String>>()
+    private val frequencies = Frequency<Pair<String, String>>()
 
     /**
      * Returns all tokens paired with the amount of
@@ -67,6 +67,6 @@ class TokenFrequencyIndexer {
         documents.add(document)
 
         val key = document to token
-        frequencies.addToIndex(key)
+        frequencies.add(key)
     }
 }
