@@ -68,38 +68,54 @@ class TFIDF(private val documentsRoot: File) {
     fun query(query: String): List<RSV.Result> {
         println("Querying documents ...")
 
+        val text = query.lowercase()
+        val languageDeterminer = LanguageDeterminer(lexicons)
+        val rawTokens = tokenizer.tokenize(text)
+        rawTokens.forEach { token ->
+            languageDeterminer.readToken(token)
+        }
+
         val queryFrequency = StringFrequency()
-        query.tokenizeStemAndFilter()
-            .forEach { queryFrequency.add(it) }
+        when (val result = languageDeterminer.currentLanguage) {
+            is LanguageDeterminer.Nothing ->
+                rawTokens.forEach { queryFrequency.add(it) }
+
+            is LanguageDeterminer.Match ->
+                rawTokens.stemAndFilter(result.languages.first()).forEach { queryFrequency.add(it) }
+        }
 
         return RSV(documentIndexer, queryFrequency).query()
     }
 
     private fun addToIndex(file: File) {
-        val name = file.absolutePath
-        println("\tIndexing document $name ...")
+        val document = file.absolutePath
+        println("\tIndexing document $document ...")
 
         val text = file.readText().lowercase()
-        text.tokenizeStemAndFilter()
-            .forEach { documentIndexer.add(name, it) }
-    }
-
-    private fun String.tokenizeStemAndFilter(): List<Token> {
         val languageDeterminer = LanguageDeterminer(lexicons)
-        val rawTokens = tokenizer.tokenize(this)
+        val rawTokens = tokenizer.tokenize(text)
         rawTokens.forEach { token ->
             languageDeterminer.readToken(token)
         }
 
-        val result = languageDeterminer.currentLanguage
-        return when (result) {
-            is LanguageDeterminer.Nothing -> rawTokens
-            is LanguageDeterminer.Match -> rawTokens.stemAndFilter(result)
+        when (val result = languageDeterminer.currentLanguage) {
+            is LanguageDeterminer.Nothing -> indexWithoutLanguage(rawTokens, document)
+            is LanguageDeterminer.Match -> indexWithLanguages(rawTokens, document, result.languages)
         }
     }
 
-    private fun List<Token>.stemAndFilter(result: LanguageDeterminer.Match): List<Token> {
-        val language = result.languages.first()
+    private fun indexWithoutLanguage(rawTokens: List<Token>, document: String) {
+        rawTokens.forEach { documentIndexer.add(document, it) }
+    }
+
+    private fun indexWithLanguages(rawTokens: List<Token>, document: String, languages: Set<Language>) {
+        for (language in languages) {
+            rawTokens.stemAndFilter(language)
+                .forEach { documentIndexer.add(document, it) }
+        }
+    }
+
+    private fun List<Token>.stemAndFilter(language: Language): List<Token> {
         val stemmer = stemmers[language] ?: return emptyList()
         val stopList = stopLists[language] ?: return emptyList()
 
