@@ -21,7 +21,6 @@ class TFIDF(private val documentsRoot: File) {
     private val stopLists = StopListsBuilder.build()
     private val lexicons = LexiconsBuilder.build()
     private val tokenizer = WhitespaceTokenizer()
-
     private val documentIndexer = TokenFrequencyIndexer()
 
     /**
