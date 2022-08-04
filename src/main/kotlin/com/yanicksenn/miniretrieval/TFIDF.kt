@@ -31,18 +31,18 @@ class TFIDF(private val documentsRoot: File) {
         println("Initializing lexicons ...")
         lexicons = LexiconsBuilder.build()
 
+        println("Initializing tokenizer ...")
+        tokenizer = WhitespaceTokenizer()
+
+        println("Initializing document indexer ...")
+        documentIndexer = TokenFrequencyIndexer()
+
         println("Building stemmed stop-lists ...")
         stopLists = HashMap()
         for ((language, stopList) in StopListsBuilder.build()) {
             val stemmer = stemmers[language]!!
             stopLists[language] = stopList.map { stemmer.stem(it) }.toHashSet()
         }
-
-        println("Initializing tokenizer ...")
-        tokenizer = WhitespaceTokenizer()
-
-        println("Initializing document indexer ...")
-        documentIndexer = TokenFrequencyIndexer()
     }
 
     /**
