@@ -1,15 +1,17 @@
 package com.yanicksenn.miniretrieval.indexer
 
+import com.yanicksenn.miniretrieval.to.Token
+
 /**
  * Counts the frequencies of the added tokens.
  */
-class TokenFrequency : Map<String, Int> {
-    private val frequencies = HashMap<String, Int>()
+class TokenFrequency : Map<Token, Int> {
+    private val frequencies = HashMap<Token, Int>()
 
-    override val entries: Set<Map.Entry<String, Int>>
+    override val entries: Set<Map.Entry<Token, Int>>
         get() = frequencies.entries
 
-    override val keys: Set<String>
+    override val keys: Set<Token>
         get() = frequencies.keys
 
     override val size: Int
@@ -23,11 +25,11 @@ class TokenFrequency : Map<String, Int> {
      * contained then its frequency will be increased.
      * @param token Token
      */
-    fun add(token: String) {
+    fun add(token: Token) {
         frequencies[token] = frequencies.getOrDefault(token, 0) + 1
     }
 
-    override fun containsKey(key: String): Boolean {
+    override fun containsKey(key: Token): Boolean {
         return frequencies.containsKey(key)
     }
 

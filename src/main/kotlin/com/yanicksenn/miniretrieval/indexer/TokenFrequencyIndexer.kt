@@ -1,21 +1,24 @@
 package com.yanicksenn.miniretrieval.indexer
 
+import com.yanicksenn.miniretrieval.to.Document
+import com.yanicksenn.miniretrieval.to.Token
+
 /**
  * A token frequency indexer builds two indices (tokens
  * by document, documents by token) based on tokens that
  * are retrieved from a document.
  */
 class TokenFrequencyIndexer {
-    private val tokensByDocumentIndex = HashMap<String, HashSet<String>>()
-    private val documentsByTokenIndex = HashMap<String, HashSet<String>>()
-    private val frequencies = HashMap<String, TokenFrequency>()
+    private val tokensByDocumentIndex = HashMap<Document, HashSet<Token>>()
+    private val documentsByTokenIndex = HashMap<Token, HashSet<Document>>()
+    private val frequencies = HashMap<Document, TokenFrequency>()
 
     /**
      * Returns all tokens paired with the amount of
      * occurrences within the given document.
      * @param document Document
      */
-    fun findTokensByDocument(document: String): Set<String> {
+    fun findTokensByDocument(document: Document): Set<Token> {
         return tokensByDocumentIndex[document] ?: emptySet()
     }
 
@@ -24,7 +27,7 @@ class TokenFrequencyIndexer {
      * token.
      * @param token Token
      */
-    fun findDocumentsByToken(token: String): Set<String> {
+    fun findDocumentsByToken(token: Token): Set<Document> {
         return documentsByTokenIndex[token] ?: emptySet()
     }
 
@@ -35,7 +38,7 @@ class TokenFrequencyIndexer {
      * @param document Document
      * @param token Token
      */
-    fun findFrequency(document: String, token: String): Int {
+    fun findFrequency(document: Document, token: Token): Int {
         return frequencies[document]?.get(token) ?: 0
     }
 
@@ -61,7 +64,7 @@ class TokenFrequencyIndexer {
      * @param document Document
      * @param token Token
      */
-    fun add(document: String, token: String) {
+    fun add(document: Document, token: Token) {
         val tokens = tokensByDocumentIndex.getOrPut(document) { HashSet() }
         tokens.add(token)
 

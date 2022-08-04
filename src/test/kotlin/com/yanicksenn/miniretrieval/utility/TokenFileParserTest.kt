@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval.utility
 
+import com.yanicksenn.miniretrieval.to.Token
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import java.io.InputStream
@@ -64,17 +65,17 @@ class TokenFileParserTest {
             .assertSize(3)
     }
 
-    private fun Set<String>.assertContainsToken(token: String): Set<String> {
+    private fun Set<Token>.assertContainsToken(token: Token): Set<Token> {
         assertTrue(contains(token), "stop-list should contain token $token")
         return this
     }
 
-    private fun Set<String>.assertDoesNotContainToken(token: String): Set<String> {
+    private fun Set<Token>.assertDoesNotContainToken(token: Token): Set<Token> {
         assertFalse(contains(token), "stop-list should not contain token $token")
         return this
     }
 
-    private fun Set<String>.assertSize(expectedSize: Int): Set<String> {
+    private fun Set<Token>.assertSize(expectedSize: Int): Set<Token> {
         assertEquals(expectedSize, size)
         return this
     }

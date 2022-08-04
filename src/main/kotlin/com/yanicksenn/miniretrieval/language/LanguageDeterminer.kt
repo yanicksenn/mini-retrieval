@@ -1,14 +1,15 @@
 package com.yanicksenn.miniretrieval.language
 
+import com.yanicksenn.miniretrieval.to.Token
 import java.lang.Integer.max
 
 /**
  * Determines the language of a document by reading its tokens
  * and matching them to lexicons.
  */
-class LanguageDeterminer(lexicons: Map<Language, Set<String>>) {
+class LanguageDeterminer(lexicons: Map<Language, Set<Token>>) {
 
-    private val languageByToken = HashMap<String, HashSet<Language>>()
+    private val languageByToken = HashMap<Token, HashSet<Language>>()
     private val languageScore = HashMap<Language, Int>()
 
     private var currentMaxScore = 0

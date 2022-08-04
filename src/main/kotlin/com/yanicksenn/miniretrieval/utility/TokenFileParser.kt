@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval.utility
 
+import com.yanicksenn.miniretrieval.to.Token
 import java.io.InputStream
 
 /**
@@ -16,13 +17,13 @@ open class TokenFileParser(private val tokenFileInputStream: InputStream) {
         private val COMMENTS_REGEX = "^\\s*#.*".toRegex()
     }
 
-    private var tokens: HashSet<String>? = null
+    private var tokens: HashSet<Token>? = null
 
     /**
      * Parses the specified token file line by line
      * and removes comments.
      */
-    open fun parse(): HashSet<String> {
+    open fun parse(): HashSet<Token> {
         if (tokens == null) {
             tokens = tokenFileInputStream.bufferedReader()
                 .lineSequence()

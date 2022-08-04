@@ -8,6 +8,7 @@ import com.yanicksenn.miniretrieval.language.LexiconsBuilder
 import com.yanicksenn.miniretrieval.stemmer.IStemmer
 import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
+import com.yanicksenn.miniretrieval.to.Token
 import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import com.yanicksenn.miniretrieval.tokenizer.WhitespaceTokenizer
 import java.io.File
@@ -18,8 +19,8 @@ import java.io.File
 class TFIDF(private val documentsRoot: File) {
 
     private val stemmers: HashMap<Language, IStemmer>
-    private val stopLists: HashMap<Language, HashSet<String>>
-    private val lexicons: HashMap<Language, HashSet<String>>
+    private val stopLists: HashMap<Language, HashSet<Token>>
+    private val lexicons: HashMap<Language, HashSet<Token>>
     private val tokenizer: ITokenizer
 
     private val documentIndexer: TokenFrequencyIndexer
@@ -83,7 +84,7 @@ class TFIDF(private val documentsRoot: File) {
             .forEach { documentIndexer.add(name, it) }
     }
 
-    private fun tokenizeStemAndFilter(text: String): List<String> {
+    private fun tokenizeStemAndFilter(text: String): List<Token> {
         val lowercaseText = text.lowercase()
         val rawTokens = tokenizer.tokenize(lowercaseText)
         val languageDeterminer = LanguageDeterminer(lexicons)
