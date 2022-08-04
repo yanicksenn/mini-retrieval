@@ -5,44 +5,44 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class FrequencyTest {
+class TokenFrequencyTest {
 
     @Test
     fun `should be empty without indexed elements`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         assertTrue(indexer.isEmpty())
     }
 
     @Test
     fun `should have zero size without indexed elements`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         assertEquals(0, indexer.size)
     }
 
     @Test
     fun `should contain indexed element`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         indexer.add("hello")
         assertTrue(indexer.containsKey("hello"))
     }
 
     @Test
     fun `should not contain not indexed element`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         indexer.add("hello")
         assertFalse(indexer.containsKey("world"))
     }
 
     @Test
     fun `should have frequency one with indexed element`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         indexer.add("hello")
         assertEquals(1, indexer["hello"])
     }
 
     @Test
     fun `should sum frequency of multiple indexed elements`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         indexer.add("hello")
         indexer.add("hello")
         indexer.add("hello")
@@ -51,7 +51,7 @@ class FrequencyTest {
 
     @Test
     fun `should contain same entries as indexed elements`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         indexer.add("hello")
         indexer.add("hello")
         indexer.add("world")
@@ -63,7 +63,7 @@ class FrequencyTest {
 
     @Test
     fun `should contain actual keys`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         indexer.add("hello")
         indexer.add("world")
 
@@ -73,7 +73,7 @@ class FrequencyTest {
 
     @Test
     fun `should contain actual values`() {
-        val indexer = Frequency<String>()
+        val indexer = TokenFrequency<String>()
         indexer.add("hello")
         indexer.add("hello")
         indexer.add("world")

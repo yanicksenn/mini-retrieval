@@ -1,13 +1,13 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.indexer.Frequency
+import com.yanicksenn.miniretrieval.indexer.TokenFrequency
 import com.yanicksenn.miniretrieval.indexer.TokenFrequencyIndexer
 import kotlin.math.log10
 import kotlin.math.sqrt
 
 class RSV(
     private val documentIndexer: TokenFrequencyIndexer,
-    private val queryFrequency: Frequency<String>
+    private val queryFrequency: TokenFrequency<String>
 ) {
 
     fun query(): List<Result> {
@@ -45,7 +45,7 @@ class RSV(
         return log10(1.0 + findFrequency(document, token))
     }
 
-    private fun Frequency<String>.tf(token: String): Double {
+    private fun TokenFrequency<String>.tf(token: String): Double {
         return log10(1.0 + getOrDefault(token, 0))
     }
 
