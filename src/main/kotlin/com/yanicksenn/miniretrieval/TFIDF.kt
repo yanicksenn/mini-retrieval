@@ -67,7 +67,7 @@ class TFIDF(private val documentsRoot: File) {
     fun query(query: String): List<RSV.Result> {
         println("Querying documents ...")
 
-        val queryFrequency = TokenFrequency<String>()
+        val queryFrequency = TokenFrequency()
         tokenizeStemAndFilter(query)
             .forEach { queryFrequency.add(it) }
 

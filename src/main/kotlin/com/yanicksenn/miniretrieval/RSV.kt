@@ -7,7 +7,7 @@ import kotlin.math.sqrt
 
 class RSV(
     private val documentIndexer: TokenFrequencyIndexer,
-    private val queryFrequency: TokenFrequency<String>
+    private val queryFrequency: TokenFrequency
 ) {
 
     fun query(): List<Result> {
@@ -45,7 +45,7 @@ class RSV(
         return log10(1.0 + findFrequency(document, token))
     }
 
-    private fun TokenFrequency<String>.tf(token: String): Double {
+    private fun TokenFrequency.tf(token: String): Double {
         return log10(1.0 + getOrDefault(token, 0))
     }
 
