@@ -36,7 +36,7 @@ class TFIDF(private val documentsRoot: File) {
 
         println("Initializing document indexer ...")
         documentIndexer = TokenFrequencyIndexer()
-
+        
         println("Building stemmed stop-lists ...")
         stopLists = HashMap()
         for ((language, stopList) in StopListsBuilder.build()) {
@@ -55,7 +55,7 @@ class TFIDF(private val documentsRoot: File) {
         documentsRoot.walk()
             .filter { it.isFile }
             .filterNot { documentIndexer.indexedDocuments().contains(it.absolutePath) }
-            .forEach { indexFile(it) }
+            .forEach { addToIndex(it) }
         return this
     }
 
@@ -74,7 +74,7 @@ class TFIDF(private val documentsRoot: File) {
         return RSV(documentIndexer, queryFrequency).query()
     }
 
-    private fun indexFile(file: File) {
+    private fun addToIndex(file: File) {
         val name = file.absolutePath
         println("\tIndexing document $name ...")
 
