@@ -13,7 +13,6 @@ class RSV(
 ) {
 
     fun query(): List<Result> {
-        println("Accumulate documents ...")
         val accumulator = HashMap<String, Double>()
         for (token in queryFrequency.keys) {
             if (!documentIndexer.indexedTokens().contains(token))
@@ -29,7 +28,6 @@ class RSV(
             }
         }
 
-        println("Normalize document score ...")
         val qNorm = qNorm()
         for ((document, score) in accumulator) {
             val dNorm = dNorm(document)
@@ -37,7 +35,6 @@ class RSV(
             accumulator[document] = sNorm
         }
 
-        println("Sort results ...")
         return accumulator.toList()
             .sortedByDescending { it.second }
             .map { Result(it.first, it.second) }

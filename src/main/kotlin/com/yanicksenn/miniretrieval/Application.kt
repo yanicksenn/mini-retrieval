@@ -12,25 +12,17 @@ class Application(
 
     override fun run() {
         val tfidf = TFIDF(documentsRoot)
-
-        measureAndPrint {
-            tfidf.rebuildDocumentIndex()
-        }
-
-        println()
+            .rebuildDocumentIndex()
 
         while (true) {
             val query = readln()
-            measureAndPrint {
+            val duration = measureTimeMillis {
                 tfidf.query(query)
                     .forEach { println(it) }
-            }
+            }.milliseconds
+
+            println("Querying took $duration")
             println()
         }
-    }
-
-    private inline fun measureAndPrint(block: () -> Unit) {
-        val duration = measureTimeMillis { block() }.milliseconds
-        println("Done after $duration")
     }
 }
