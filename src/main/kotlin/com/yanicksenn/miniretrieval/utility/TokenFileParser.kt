@@ -23,16 +23,26 @@ open class TokenFileParser(private val tokenFileInputStream: InputStream) {
      * Parses the specified token file line by line
      * and removes comments.
      */
-    open fun parse(): HashSet<Token> {
+    fun parse(): HashSet<Token> {
         if (tokens == null) {
             tokens = tokenFileInputStream.bufferedReader()
                 .lineSequence()
                 .filterNot { it.matches(COMMENTS_REGEX) }
                 .filterNot { it.isBlank() }
                 .map { it.trim() }
+                .map { manipulate(it) }
                 .toHashSet()
         }
 
         return HashSet(tokens!!)
+    }
+
+    /**
+     * Manipulates the given token to allow modifications
+     * such as stemming.
+     * @param token Token
+     */
+    open fun manipulate(token: Token): Token {
+        return token
     }
 }
