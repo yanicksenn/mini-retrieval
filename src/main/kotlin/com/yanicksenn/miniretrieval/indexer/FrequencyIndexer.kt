@@ -18,6 +18,17 @@ class FrequencyIndexer<T> : Map<T, Int> {
     override val values: Collection<Int>
         get() = index.values
 
+
+    /**
+     * Adds all given elements to the index and if any
+     * was already contained then its frequency will be
+     * increased.
+     * @param element Element
+     */
+    fun addAllToIndex(elements: List<T>) {
+        elements.forEach { addToIndex(it) }
+    }
+
     /**
      * Adds the given element to the index and if it
      * was already contained then it increases the
