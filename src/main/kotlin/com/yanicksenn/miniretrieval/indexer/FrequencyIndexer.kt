@@ -24,7 +24,7 @@ class FrequencyIndexer<T> : Map<T, Int> {
      * frequency.
      * @param element Element
      */
-    fun index(element: T) {
+    fun addToIndex(element: T) {
         index[element] = index.getOrDefault(element, 0) + 1
     }
 
