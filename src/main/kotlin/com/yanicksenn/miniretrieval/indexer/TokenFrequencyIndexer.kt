@@ -6,7 +6,7 @@ package com.yanicksenn.miniretrieval.indexer
  * are retrieved from a document.
  */
 class TokenFrequencyIndexer {
-    private val tokensByDocumentIndex = HashMap<String, HashMap<String, Int>>()
+    private val tokensByDocumentIndex = HashMap<String, FrequencyIndexer<String>>()
     private val documentsByTokenIndex = HashMap<String, HashSet<String>>()
 
     /**
@@ -14,8 +14,8 @@ class TokenFrequencyIndexer {
      * occurrences within the given document.
      * @param document Document
      */
-    fun findTokensByDocument(document: String): Map<String, Int> {
-        return tokensByDocumentIndex[document] ?: emptyMap()
+    fun findTokensByDocument(document: String): FrequencyIndexer<String> {
+        return tokensByDocumentIndex[document] ?: FrequencyIndexer()
     }
 
     /**
@@ -60,8 +60,8 @@ class TokenFrequencyIndexer {
      * @param token Token
      */
     fun addToIndices(document: String, token: String) {
-        val tokens = tokensByDocumentIndex.getOrPut(document) { HashMap() }
-        tokens[token] = tokens.getOrDefault(token, 0) + 1
+        val tokens = tokensByDocumentIndex.getOrPut(document) { FrequencyIndexer() }
+        tokens.addToIndex(token)
 
         val documents = documentsByTokenIndex.getOrPut(token) { HashSet() }
         documents.add(document)
