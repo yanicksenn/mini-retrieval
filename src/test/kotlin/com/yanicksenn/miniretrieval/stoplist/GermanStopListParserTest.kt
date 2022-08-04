@@ -9,13 +9,13 @@ class GermanStopListParserTest {
 
     @Test
     fun `ensure german stop-list parser can be initialised`() {
-        assertDoesNotThrow { GermanLexiconParser() }
+        assertDoesNotThrow { GermanLexiconParser }
     }
 
     @Test
     fun `ensure parsing multiple times works`() {
-        val first = GermanLexiconParser().parse()
-        val second = GermanLexiconParser().parse()
+        val first = GermanLexiconParser.parse()
+        val second = GermanLexiconParser.parse()
         assertEquals(first, second)
     }
 }

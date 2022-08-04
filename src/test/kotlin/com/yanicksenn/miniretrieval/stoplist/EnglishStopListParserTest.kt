@@ -9,13 +9,13 @@ class EnglishStopListParserTest {
 
     @Test
     fun `ensure english stop-list parser can be initialised`() {
-        assertDoesNotThrow { EnglishLexiconParser() }
+        assertDoesNotThrow { EnglishLexiconParser }
     }
 
     @Test
     fun `ensure parsing multiple times works`() {
-        val first = EnglishLexiconParser().parse()
-        val second = EnglishLexiconParser().parse()
+        val first = EnglishLexiconParser.parse()
+        val second = EnglishLexiconParser.parse()
         assertEquals(first, second)
     }
 }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 class GermanLexiconParserTest {
 
     @Test
-    fun `ensure german lexicon parser can be initialised`() {
-        assertDoesNotThrow { GermanLexiconParser() }
+    fun `ensure german lexicon parser can be parsed`() {
+        assertDoesNotThrow { GermanLexiconParser.parse() }
     }
 }
