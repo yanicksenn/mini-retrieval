@@ -26,13 +26,13 @@ class TokenFrequencyIndexerTest {
 
     @Test
     fun `should contain token in indexed tokens`() {
-        indexer.addToIndices("doc1.txt", "hello")
+        indexer.add("doc1.txt", "hello")
         assertTrue(indexer.indexedTokens().contains("hello"))
     }
 
     @Test
     fun `should contain token in indexed documents`() {
-        indexer.addToIndices("doc1.txt", "hello")
+        indexer.add("doc1.txt", "hello")
         assertTrue(indexer.indexedDocuments().contains("doc1.txt"))
     }
 
@@ -43,10 +43,10 @@ class TokenFrequencyIndexerTest {
 
     @Test
     fun `should find tokens for document`() {
-        indexer.addToIndices("doc1.txt", "hello")
-        indexer.addToIndices("doc1.txt", "world")
-        indexer.addToIndices("doc2.txt", "hello")
-        indexer.addToIndices("doc2.txt", "there")
+        indexer.add("doc1.txt", "hello")
+        indexer.add("doc1.txt", "world")
+        indexer.add("doc2.txt", "hello")
+        indexer.add("doc2.txt", "there")
 
         val tokens = indexer.findTokensByDocument("doc1.txt")
         assertEquals(setOf("hello", "world"), tokens)
@@ -54,30 +54,30 @@ class TokenFrequencyIndexerTest {
 
     @Test
     fun `should find no frequency for token in document`() {
-        indexer.addToIndices("doc1.txt", "hello")
+        indexer.add("doc1.txt", "hello")
         assertEquals(0, indexer.findFrequency("doc2.txt", "world"))
     }
 
     @Test
     fun `should find frequency for token in document`() {
-        indexer.addToIndices("doc1.txt", "hello")
+        indexer.add("doc1.txt", "hello")
         assertEquals(1, indexer.findFrequency("doc1.txt", "hello"))
     }
 
     @Test
     fun `should find summed up frequency for same token in document`() {
-        indexer.addToIndices("doc1.txt", "hello")
-        indexer.addToIndices("doc1.txt", "hello")
-        indexer.addToIndices("doc1.txt", "hello")
+        indexer.add("doc1.txt", "hello")
+        indexer.add("doc1.txt", "hello")
+        indexer.add("doc1.txt", "hello")
         assertEquals(3, indexer.findFrequency("doc1.txt", "hello"))
     }
 
     @Test
     fun `should not find summed up frequency for same token in different documents`() {
-        indexer.addToIndices("doc1.txt", "hello")
-        indexer.addToIndices("doc1.txt", "world")
-        indexer.addToIndices("doc2.txt", "hello")
-        indexer.addToIndices("doc2.txt", "there")
+        indexer.add("doc1.txt", "hello")
+        indexer.add("doc1.txt", "world")
+        indexer.add("doc2.txt", "hello")
+        indexer.add("doc2.txt", "there")
 
         assertEquals(1, indexer.findFrequency("doc1.txt", "hello"))
         assertEquals(1, indexer.findFrequency("doc1.txt", "world"))
@@ -94,10 +94,10 @@ class TokenFrequencyIndexerTest {
 
     @Test
     fun `should find documents for token`() {
-        indexer.addToIndices("doc1.txt", "hello")
-        indexer.addToIndices("doc1.txt", "world")
-        indexer.addToIndices("doc2.txt", "hello")
-        indexer.addToIndices("doc2.txt", "there")
+        indexer.add("doc1.txt", "hello")
+        indexer.add("doc1.txt", "world")
+        indexer.add("doc2.txt", "hello")
+        indexer.add("doc2.txt", "there")
 
         val documents = indexer.findDocumentsByToken("hello")
         assertEquals(setOf("doc1.txt", "doc2.txt"), documents)

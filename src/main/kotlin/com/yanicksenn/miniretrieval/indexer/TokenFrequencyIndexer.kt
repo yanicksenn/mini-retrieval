@@ -61,7 +61,7 @@ class TokenFrequencyIndexer {
      * @param document Document
      * @param token Token
      */
-    fun addToIndices(document: String, token: String) {
+    fun add(document: String, token: String) {
         val tokens = tokensByDocumentIndex.getOrPut(document) { HashSet() }
         tokens.add(token)
 

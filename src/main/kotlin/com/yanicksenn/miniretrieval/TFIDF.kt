@@ -80,7 +80,7 @@ class TFIDF(private val documentsRoot: File) {
 
         val text = file.readText()
         tokenizeStemAndFilter(text)
-            .forEach { documentIndexer.addToIndices(name, it) }
+            .forEach { documentIndexer.add(name, it) }
     }
 
     private fun tokenizeStemAndFilter(text: String): List<String> {
