@@ -37,7 +37,7 @@ class TFIDF(private val documentsRoot: File) {
 
         println("Initializing document indexer ...")
         documentIndexer = TokenFrequencyIndexer()
-        
+
         println("Building stemmed stop-lists ...")
         stopLists = HashMap()
         for ((language, stopList) in StopListsBuilder.build()) {
@@ -69,7 +69,7 @@ class TFIDF(private val documentsRoot: File) {
         println("Querying documents ...")
 
         val queryFrequency = StringFrequency()
-        tokenizeStemAndFilter(query)
+        query.tokenizeStemAndFilter()
             .forEach { queryFrequency.add(it) }
 
         return RSV(documentIndexer, queryFrequency).query()
@@ -79,30 +79,31 @@ class TFIDF(private val documentsRoot: File) {
         val name = file.absolutePath
         println("\tIndexing document $name ...")
 
-        val text = file.readText()
-        tokenizeStemAndFilter(text)
+        val text = file.readText().lowercase()
+        text.tokenizeStemAndFilter()
             .forEach { documentIndexer.add(name, it) }
     }
 
-    private fun tokenizeStemAndFilter(text: String): List<Token> {
-        val lowercaseText = text.lowercase()
-        val rawTokens = tokenizer.tokenize(lowercaseText)
+    private fun String.tokenizeStemAndFilter(): List<Token> {
         val languageDeterminer = LanguageDeterminer(lexicons)
+        val rawTokens = tokenizer.tokenize(this)
         rawTokens.forEach { token ->
             languageDeterminer.readToken(token)
         }
 
-        when (val result = languageDeterminer.currentLanguage) {
-            is LanguageDeterminer.Nothing -> return emptyList()
-            is LanguageDeterminer.Match -> {
-                val language = result.language
-                val stemmer = stemmers[language] ?: return emptyList()
-                val stopList = stopLists[language] ?: return emptyList()
-
-                return rawTokens
-                    .map { stemmer.stem(it) }
-                    .filterNot { stopList.contains(it) }
-            }
+        val result = languageDeterminer.currentLanguage
+        return when (result) {
+            is LanguageDeterminer.Nothing -> rawTokens
+            is LanguageDeterminer.Match -> rawTokens.stemAndFilter(result)
         }
+    }
+
+    private fun List<Token>.stemAndFilter(result: LanguageDeterminer.Match): List<Token> {
+        val language = result.languages.first()
+        val stemmer = stemmers[language] ?: return emptyList()
+        val stopList = stopLists[language] ?: return emptyList()
+
+        return map { stemmer.stem(it) }
+            .filterNot { stopList.contains(it) }
     }
 }

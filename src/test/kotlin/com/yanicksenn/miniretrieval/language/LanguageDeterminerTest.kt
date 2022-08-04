@@ -24,7 +24,7 @@ class LanguageDeterminerTest {
         val languageDeterminer = LanguageDeterminer(lexicons)
         tokens.forEach { languageDeterminer.readToken(it.lowercase()) }
 
-        assertEquals(LanguageDeterminer.Match(Language.ENGLISH), languageDeterminer.currentLanguage)
+        assertEquals(matchOf(Language.ENGLISH), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -42,7 +42,7 @@ class LanguageDeterminerTest {
         val languageDeterminer = LanguageDeterminer(lexicons)
         tokens.forEach { languageDeterminer.readToken(it.lowercase()) }
 
-        assertEquals(LanguageDeterminer.Match(Language.GERMAN), languageDeterminer.currentLanguage)
+        assertEquals(matchOf(Language.GERMAN), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -71,12 +71,16 @@ class LanguageDeterminerTest {
     fun `ensure nothing is returned when language is not clearly definable`() {
         val languageDeterminer = LanguageDeterminer(lexicons)
 
-        languageDeterminer.readToken("ich")
-        languageDeterminer.readToken("du")
-
         languageDeterminer.readToken("i")
         languageDeterminer.readToken("you")
 
-        assertEquals(LanguageDeterminer.Nothing, languageDeterminer.currentLanguage)
+        languageDeterminer.readToken("ich")
+        languageDeterminer.readToken("du")
+
+        assertEquals(matchOf(Language.ENGLISH, Language.GERMAN), languageDeterminer.currentLanguage)
+    }
+
+    private fun matchOf(vararg languages: Language): LanguageDeterminer.Match {
+        return LanguageDeterminer.Match(languages.toSet())
     }
 }

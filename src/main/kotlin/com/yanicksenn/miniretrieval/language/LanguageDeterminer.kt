@@ -25,10 +25,7 @@ class LanguageDeterminer(lexicons: Map<Language, Set<Token>>) {
                 return Nothing
 
             val bestMatches = languageScore.filter { it.value == currentMaxScore }.keys.toHashSet()
-            if (bestMatches.size > 1)
-                return Nothing
-
-            return Match(bestMatches.first())
+            return Match(bestMatches)
         }
 
 
@@ -84,8 +81,8 @@ class LanguageDeterminer(lexicons: Map<Language, Set<Token>>) {
     object Nothing : Result
 
     /**
-     * When a language is matched.
+     * When languages are matched.
      */
-    data class Match(val language: Language) : Result
+    data class Match(val languages: Set<Language>) : Result
 
 }
