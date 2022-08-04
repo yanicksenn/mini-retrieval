@@ -38,7 +38,7 @@ class TokenFrequencyIndexerTest {
 
     @Test
     fun `should not find tokens for unknown document`() {
-        assertEquals(emptySet(), indexer.findTokensByDocument("doc1.txt"))
+        assertEquals(emptyMap(), indexer.findTokensByDocument("doc1.txt"))
     }
 
     @Test
@@ -49,19 +49,19 @@ class TokenFrequencyIndexerTest {
         indexer.add("doc2.txt", "there")
 
         val tokens = indexer.findTokensByDocument("doc1.txt")
-        assertEquals(setOf("hello", "world"), tokens)
+        assertEquals(mapOf("hello" to 1, "world" to 1), tokens)
     }
 
     @Test
     fun `should find no frequency for token in document`() {
         indexer.add("doc1.txt", "hello")
-        assertEquals(0, indexer.findFrequency("doc2.txt", "world"))
+        assertEquals(0, indexer.findTokensByDocument("doc2.txt").getOrDefault("world", 0))
     }
 
     @Test
     fun `should find frequency for token in document`() {
         indexer.add("doc1.txt", "hello")
-        assertEquals(1, indexer.findFrequency("doc1.txt", "hello"))
+        assertEquals(1, indexer.findTokensByDocument("doc1.txt").getOrDefault("hello", 0))
     }
 
     @Test
@@ -69,7 +69,7 @@ class TokenFrequencyIndexerTest {
         indexer.add("doc1.txt", "hello")
         indexer.add("doc1.txt", "hello")
         indexer.add("doc1.txt", "hello")
-        assertEquals(3, indexer.findFrequency("doc1.txt", "hello"))
+        assertEquals(3, indexer.findTokensByDocument("doc1.txt").getOrDefault("hello", 0))
     }
 
     @Test
@@ -79,11 +79,11 @@ class TokenFrequencyIndexerTest {
         indexer.add("doc2.txt", "hello")
         indexer.add("doc2.txt", "there")
 
-        assertEquals(1, indexer.findFrequency("doc1.txt", "hello"))
-        assertEquals(1, indexer.findFrequency("doc1.txt", "world"))
+        assertEquals(1, indexer.findTokensByDocument("doc1.txt").getOrDefault("hello", 0))
+        assertEquals(1, indexer.findTokensByDocument("doc1.txt").getOrDefault("world", 0))
 
-        assertEquals(1, indexer.findFrequency("doc2.txt", "hello"))
-        assertEquals(1, indexer.findFrequency("doc2.txt", "there"))
+        assertEquals(1, indexer.findTokensByDocument("doc2.txt").getOrDefault("hello", 0))
+        assertEquals(1, indexer.findTokensByDocument("doc2.txt").getOrDefault("there", 0))
     }
 
     @Test
@@ -100,6 +100,6 @@ class TokenFrequencyIndexerTest {
         indexer.add("doc2.txt", "there")
 
         val documents = indexer.findDocumentsByToken("hello")
-        assertEquals(setOf("doc1.txt", "doc2.txt"), documents)
+        assertEquals(mapOf("doc1.txt" to 1, "doc2.txt" to 1), documents)
     }
 }
