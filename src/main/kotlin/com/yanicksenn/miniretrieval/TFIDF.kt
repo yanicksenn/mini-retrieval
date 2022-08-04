@@ -17,34 +17,12 @@ import java.io.File
  * TFIDF ranking model.
  */
 class TFIDF(private val documentsRoot: File) {
+    private val stemmers = StemmersBuilder.build()
+    private val stopLists = StopListsBuilder.build()
+    private val lexicons = LexiconsBuilder.build()
+    private val tokenizer = WhitespaceTokenizer()
 
-    private val stemmers: HashMap<Language, IStemmer>
-    private val stopLists: HashMap<Language, HashSet<Token>>
-    private val lexicons: HashMap<Language, HashSet<Token>>
-    private val tokenizer: ITokenizer
-
-    private val documentIndexer: TokenFrequencyIndexer
-
-    init {
-        println("Initializing stemmers ...")
-        stemmers = StemmersBuilder.build()
-
-        println("Initializing lexicons ...")
-        lexicons = LexiconsBuilder.build()
-
-        println("Initializing tokenizer ...")
-        tokenizer = WhitespaceTokenizer()
-
-        println("Initializing document indexer ...")
-        documentIndexer = TokenFrequencyIndexer()
-
-        println("Building stemmed stop-lists ...")
-        stopLists = HashMap()
-        for ((language, stopList) in StopListsBuilder.build()) {
-            val stemmer = stemmers[language]!!
-            stopLists[language] = stopList.map { stemmer.stem(it) }.toHashSet()
-        }
-    }
+    private val documentIndexer = TokenFrequencyIndexer()
 
     /**
      * Rebuilds the document indexer based on the all
@@ -52,7 +30,6 @@ class TFIDF(private val documentsRoot: File) {
      * yet been indexed.
      */
     fun rebuildDocumentIndex(): TFIDF {
-        println("Indexing documents ...")
         documentsRoot.walk()
             .filter { it.isFile }
             .filterNot { documentIndexer.indexedDocuments().contains(it.absolutePath) }
@@ -66,8 +43,6 @@ class TFIDF(private val documentsRoot: File) {
      * @param query Query
      */
     fun query(query: String): List<RSV.Result> {
-        println("Querying documents ...")
-
         val text = query.lowercase()
         val languageDeterminer = LanguageDeterminer(lexicons)
         val rawTokens = tokenizer.tokenize(text)
@@ -89,8 +64,6 @@ class TFIDF(private val documentsRoot: File) {
 
     private fun addToIndex(file: File) {
         val document = file.absolutePath
-        println("\tIndexing document $document ...")
-
         val text = file.readText().lowercase()
         val languageDeterminer = LanguageDeterminer(lexicons)
         val rawTokens = tokenizer.tokenize(text)

@@ -23,7 +23,7 @@ class Application(
             val query = readln()
             measureAndPrint {
                 tfidf.query(query)
-                    .forEach { println("\t$it") }
+                    .forEach { println(it) }
             }
             println()
         }
