@@ -4,11 +4,11 @@ import com.yanicksenn.miniretrieval.to.Document
 import com.yanicksenn.miniretrieval.to.Token
 
 /**
- * A token frequency indexer builds two indices (tokens
- * by document, documents by token) based on tokens that
+ * A tf-idf index builds contains indices (tokens by
+ * document, documents by token) based on tokens that
  * are retrieved from a document.
  */
-class TokenFrequencyIndexer {
+class TFIDFIndex {
     private val tokensByDocumentIndex = HashMap<Document, StringFrequency>()
     private val documentsByTokenIndex = HashMap<Token, StringFrequency>()
 
