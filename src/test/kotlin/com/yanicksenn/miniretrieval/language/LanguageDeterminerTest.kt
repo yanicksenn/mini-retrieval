@@ -1,12 +1,12 @@
 package com.yanicksenn.miniretrieval.language
 
-import com.yanicksenn.miniretrieval.tokenizer.WhitespaceTokenizer
+import com.yanicksenn.miniretrieval.tokenizer.opennlp.WhitespaceTokenizerOpennlp
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class LanguageDeterminerTest {
 
-    private val tokenizer = WhitespaceTokenizer()
+    private val tokenizer = WhitespaceTokenizerOpennlp()
     private var lexicons = LexiconsBuilder.build()
 
     @Test
@@ -24,7 +24,7 @@ class LanguageDeterminerTest {
         val languageDeterminer = LanguageDeterminer(lexicons)
         tokens.forEach { languageDeterminer.readToken(it.lowercase()) }
 
-        assertEquals(matchOf(Language.ENGLISH), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(Language.ENGLISH), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -42,7 +42,7 @@ class LanguageDeterminerTest {
         val languageDeterminer = LanguageDeterminer(lexicons)
         tokens.forEach { languageDeterminer.readToken(it.lowercase()) }
 
-        assertEquals(matchOf(Language.GERMAN), languageDeterminer.currentLanguage)
+        assertEquals(LanguageDeterminer.Match(Language.GERMAN), languageDeterminer.currentLanguage)
     }
 
     @Test
@@ -77,10 +77,6 @@ class LanguageDeterminerTest {
         languageDeterminer.readToken("ich")
         languageDeterminer.readToken("du")
 
-        assertEquals(matchOf(Language.ENGLISH, Language.GERMAN), languageDeterminer.currentLanguage)
-    }
-
-    private fun matchOf(vararg languages: Language): LanguageDeterminer.Match {
-        return LanguageDeterminer.Match(languages.toSet())
+        assertEquals(LanguageDeterminer.Unsure, languageDeterminer.currentLanguage)
     }
 }
