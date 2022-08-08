@@ -9,8 +9,8 @@ import com.yanicksenn.miniretrieval.to.Token
  * are retrieved from a document.
  */
 class TFIDFIndex {
-    private val tokensByDocumentIndex = HashMap<Document, StringFrequency>()
-    private val documentsByTokenIndex = HashMap<Token, StringFrequency>()
+    private val tokensByDocumentIndex = StringFrequencyByKey()
+    private val documentsByTokenIndex = StringFrequencyByKey()
 
     /**
      * Returns all tokens paired with the amount of
@@ -53,10 +53,7 @@ class TFIDFIndex {
      * @param token Token
      */
     fun add(document: Document, token: Token) {
-        val tokens = tokensByDocumentIndex.getOrPut(document) { StringFrequency() }
-        tokens.add(token)
-
-        val documents = documentsByTokenIndex.getOrPut(token) { StringFrequency() }
-        documents.add(document)
+        tokensByDocumentIndex.add(document, token)
+        documentsByTokenIndex.add(token, document)
     }
 }
