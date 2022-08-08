@@ -2,23 +2,14 @@ package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.indexer.TFIDFIndex
-import com.yanicksenn.miniretrieval.language.Language
-import com.yanicksenn.miniretrieval.language.LanguageDeterminer
-import com.yanicksenn.miniretrieval.language.LexiconsBuilder
-import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
-import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
-import com.yanicksenn.miniretrieval.to.Token
-import com.yanicksenn.miniretrieval.tokenizer.WhitespaceTokenizer
+import com.yanicksenn.miniretrieval.pipeline.ParsingPipeline
+import com.yanicksenn.miniretrieval.pipeline.TokenizationPipeline
 import java.io.File
 
 /**
  * TFIDF ranking model.
  */
 class TFIDF(private val documentsRoot: File) {
-    private val stemmers = StemmersBuilder.build()
-    private val stopLists = StopListsBuilder.build()
-    private val lexicons = LexiconsBuilder.build()
-    private val tokenizer = WhitespaceTokenizer()
     private val documentIndex = TFIDFIndex()
 
     /**
@@ -30,67 +21,31 @@ class TFIDF(private val documentsRoot: File) {
         documentsRoot.walk()
             .filter { it.isFile }
             .filterNot { documentIndex.indexedDocuments().contains(it.absolutePath) }
-            .forEach { addToIndex(it) }
+            .forEach { index(it) }
 
         return this
     }
 
     /**
-     * Queries the relevant documents based on the
-     * provided queries.
-     * @param query Query
+     * Indexes the given file.
+     * @param file File
      */
-    fun query(query: String): List<RSV.Result> {
-        val text = query.lowercase()
-        val languageDeterminer = LanguageDeterminer(lexicons)
-        val rawTokens = tokenizer.tokenize(text)
-        rawTokens.forEach { token ->
-            languageDeterminer.readToken(token)
-        }
+    fun index(file: File) {
+        val (document, textRaw) = ParsingPipeline.pipeline(file)
+        TokenizationPipeline.pipeline(textRaw)
+            .forEach { documentIndex.add(document, it) }
+    }
 
+    /**
+     * Queries the relevant documents based on the
+     * given raw query.
+     * @param queryRaw Raw query
+     */
+    fun query(queryRaw: String): List<RSV.Result> {
         val queryFrequency = StringFrequency()
-        when (val result = languageDeterminer.currentLanguage) {
-            is LanguageDeterminer.Nothing ->
-                rawTokens.forEach { queryFrequency.add(it) }
-
-            is LanguageDeterminer.Match ->
-                rawTokens.stemAndFilter(result.languages.first()).forEach { queryFrequency.add(it) }
-        }
+        TokenizationPipeline.pipeline(queryRaw)
+            .forEach { queryFrequency.add(it) }
 
         return RSV(documentIndex, queryFrequency).query()
-    }
-
-    private fun addToIndex(file: File) {
-        val document = file.absolutePath
-        val text = file.readText().lowercase()
-        val languageDeterminer = LanguageDeterminer(lexicons)
-        val rawTokens = tokenizer.tokenize(text)
-        rawTokens.forEach { token ->
-            languageDeterminer.readToken(token)
-        }
-
-        when (val result = languageDeterminer.currentLanguage) {
-            is LanguageDeterminer.Nothing -> indexWithoutLanguage(rawTokens, document)
-            is LanguageDeterminer.Match -> indexWithLanguages(rawTokens, document, result.languages)
-        }
-    }
-
-    private fun indexWithoutLanguage(rawTokens: List<Token>, document: String) {
-        rawTokens.forEach { documentIndex.add(document, it) }
-    }
-
-    private fun indexWithLanguages(rawTokens: List<Token>, document: String, languages: Set<Language>) {
-        for (language in languages) {
-            rawTokens.stemAndFilter(language)
-                .forEach { documentIndex.add(document, it) }
-        }
-    }
-
-    private fun List<Token>.stemAndFilter(language: Language): List<Token> {
-        val stemmer = stemmers[language] ?: return emptyList()
-        val stopList = stopLists[language] ?: return emptyList()
-
-        return map { stemmer.stem(it) }
-            .filterNot { stopList.contains(it) }
     }
 }
