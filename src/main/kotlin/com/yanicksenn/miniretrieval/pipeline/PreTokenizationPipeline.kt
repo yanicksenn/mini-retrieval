@@ -7,6 +7,6 @@ object PreTokenizationPipeline {
     private val defaultTokenizer = DefaultTokenizer
 
     fun pipeline(text: String): List<Token> {
-        return defaultTokenizer.tokenize(text.lowercase())
+        return defaultTokenizer.tokenize(text)
     }
 }
