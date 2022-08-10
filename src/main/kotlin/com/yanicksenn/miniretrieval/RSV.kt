@@ -1,25 +1,27 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
-import com.yanicksenn.miniretrieval.indexer.TFIDFIndex
+import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
 import com.yanicksenn.miniretrieval.to.Document
 import com.yanicksenn.miniretrieval.to.Token
 import kotlin.math.log10
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 class RSV(
-    private val documentIndex: TFIDFIndex,
+    private val documentIndex: StringFrequencyByKey,
+    private val tokenIndex: StringFrequencyByKey,
     private val queryFrequency: StringFrequency
 ) {
 
     fun query(): List<Result> {
         val accumulator = HashMap<String, Double>()
         for (token in queryFrequency.keys) {
-            if (!documentIndex.indexedTokens().contains(token))
+            if (!tokenIndex.contains(token))
                 continue
 
             val b = b(token)
-            val documentsWithToken = documentIndex.findDocumentsByToken(token)
+            val documentsWithToken = tokenIndex[token]
             for (document in documentsWithToken.keys) {
                 val a = a(document, token)
                 var score = accumulator.getOrDefault(document, 0.0)
@@ -40,37 +42,35 @@ class RSV(
             .map { Result(it.first, it.second) }
     }
 
-    private fun TFIDFIndex.tf(document: Document, token: Token): Double {
-        return log10(1.0 + findTokensByDocument(document).getOrDefault(token, 0))
+    private fun StringFrequencyByKey.tf(document: Document, token: Token): Double {
+        return log10(1.0 + this[document][token])
     }
 
     private fun StringFrequency.tf(token: Token): Double {
-        return log10(1.0 + getOrDefault(token, 0))
+        return log10(1.0 + this[token])
     }
 
-    private fun TFIDFIndex.idf(token: Token): Double {
-        return log10((indexedDocuments().size + 1.0) / (findDocumentsByToken(token).size + 1.0))
+    private fun idf(token: Token): Double {
+        return log10((documentIndex.size + 1.0) / (tokenIndex[token].size + 1.0))
     }
+
 
     private fun dNorm(document: Document): Double {
-        val tokens = documentIndex.findTokensByDocument(document)
-        return sqrt(tokens.keys.sumOf { pow2(a(document, it)) })
-    }
-
-    private fun qNorm(): Double {
-        return sqrt(queryFrequency.keys.sumOf { pow2(b(it)) })
+        val tokens = documentIndex.getOrElse(document) { StringFrequency() }
+        return sqrt(tokens.keys.sumOf { a(document, it).pow(2) })
     }
 
     private fun a(document: Document, token: Token): Double {
-        return documentIndex.tf(document, token) * documentIndex.idf(token)
+        return documentIndex.tf(document, token) * idf(token)
+    }
+
+
+    private fun qNorm(): Double {
+        return sqrt(queryFrequency.keys.sumOf { b(it).pow(2) })
     }
 
     private fun b(token: Token): Double {
-        return queryFrequency.tf(token) * documentIndex.idf(token)
-    }
-
-    private fun pow2(value: Double): Double {
-        return value * value
+        return queryFrequency.tf(token) * idf(token)
     }
 
     data class Result(val document: String, val score: Double)

@@ -1,7 +1,7 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
-import com.yanicksenn.miniretrieval.indexer.TFIDFIndex
+import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
 import com.yanicksenn.miniretrieval.pipeline.ParsingPipeline
 import com.yanicksenn.miniretrieval.pipeline.TokenizationPipeline
 import java.io.File
@@ -10,7 +10,8 @@ import java.io.File
  * TFIDF ranking model.
  */
 class TFIDF(private val documentsRoot: File) {
-    private val documentIndex = TFIDFIndex()
+    private val documentIndex = StringFrequencyByKey()
+    private val tokenIndex = StringFrequencyByKey()
 
     /**
      * Rebuilds the document indexer based on the all
@@ -20,7 +21,7 @@ class TFIDF(private val documentsRoot: File) {
     fun rebuildDocumentIndex(): TFIDF {
         documentsRoot.walk()
             .filter { it.isFile }
-            .filterNot { documentIndex.indexedDocuments().contains(it.absolutePath) }
+            .filterNot { documentIndex.contains(it.absolutePath) }
             .forEach { index(it) }
 
         return this
@@ -33,7 +34,10 @@ class TFIDF(private val documentsRoot: File) {
     fun index(file: File) {
         val (document, textRaw) = ParsingPipeline.pipeline(file)
         TokenizationPipeline.pipeline(textRaw)
-            .forEach { documentIndex.add(document, it) }
+            .forEach {
+                documentIndex.add(document, it)
+                tokenIndex.add(it, document)
+            }
     }
 
     /**
@@ -46,6 +50,6 @@ class TFIDF(private val documentsRoot: File) {
         TokenizationPipeline.pipeline(queryRaw)
             .forEach { queryFrequency.add(it) }
 
-        return RSV(documentIndex, queryFrequency).query()
+        return RSV(documentIndex, tokenIndex, queryFrequency).query()
     }
 }
