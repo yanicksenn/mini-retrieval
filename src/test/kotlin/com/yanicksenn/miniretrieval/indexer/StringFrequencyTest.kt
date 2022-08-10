@@ -80,4 +80,11 @@ class StringFrequencyTest {
 
         assertEquals(setOf(2, 1), indexer.values.toSet())
     }
+
+    @Test
+    fun `should return zero when not containing element`() {
+        val indexer = StringFrequency()
+        indexer.add("hello")
+        assertEquals(0, indexer["world"])
+    }
 }

@@ -35,8 +35,8 @@ class StringFrequency : Map<String, Int> {
         return containsValue(value)
     }
 
-    override fun get(key: String): Int? {
-        return frequencies[key]
+    override fun get(key: String): Int {
+        return frequencies[key] ?: 0
     }
 
     override fun isEmpty(): Boolean {

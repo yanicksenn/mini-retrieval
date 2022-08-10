@@ -4,6 +4,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 
 class StringFrequencyByKeyTest {
 
@@ -37,7 +38,7 @@ class StringFrequencyByKeyTest {
     fun `should have frequency one with indexed element`() {
         val indexer = StringFrequencyByKey()
         indexer.add("doc1.txt", "hello")
-        assertEquals(1, indexer["doc1.txt"]!!["hello"])
+        assertEquals(1, indexer["doc1.txt"]["hello"])
     }
 
     @Test
@@ -46,7 +47,7 @@ class StringFrequencyByKeyTest {
         indexer.add("doc1.txt", "hello")
         indexer.add("doc1.txt", "hello")
         indexer.add("doc1.txt", "hello")
-        assertEquals(3, indexer["doc1.txt"]!!["hello"])
+        assertEquals(3, indexer["doc1.txt"]["hello"])
     }
 
     @Test
@@ -55,7 +56,14 @@ class StringFrequencyByKeyTest {
         indexer.add("doc1.txt", "hello")
         indexer.add("doc1.txt", "hello")
         indexer.add("doc2.txt", "hello")
-        assertEquals(2, indexer["doc1.txt"]!!["hello"])
-        assertEquals(1, indexer["doc2.txt"]!!["hello"])
+        assertEquals(2, indexer["doc1.txt"]["hello"])
+        assertEquals(1, indexer["doc2.txt"]["hello"])
+    }
+
+    @Test
+    fun `should return non-null object when not containing key`() {
+        val indexer = StringFrequencyByKey()
+        indexer.add("doc1.txt", "hello")
+        assertNotNull(indexer["doc1.txt"])
     }
 }
