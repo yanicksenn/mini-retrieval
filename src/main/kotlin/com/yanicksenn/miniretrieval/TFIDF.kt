@@ -30,13 +30,14 @@ class TFIDF(private val documentsRoot: File) {
      * files within the documents root which have not
      * yet been indexed.
      */
-    fun rebuildDocumentIndex(): TFIDF {
-        documentsRoot.walk()
+    fun index(): Sequence<File> {
+        return documentsRoot.walk()
             .filter { it.isFile }
             .filterNot { documentIndex.contains(it.absolutePath) }
-            .forEach { indexFile(it) }
-
-        return this
+            .map {
+                indexFile(it)
+                it
+            }
     }
 
     /**

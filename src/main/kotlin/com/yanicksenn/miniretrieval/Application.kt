@@ -1,34 +1,42 @@
 package com.yanicksenn.miniretrieval
 
 import java.io.File
-import kotlin.system.measureTimeMillis
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Wrapper for the actual business logic.
  */
-class Application(
-    private val documentsRoot: File) : Runnable {
+class Application(documentsRoot: File) {
+    private val tfidf = TFIDF(documentsRoot)
 
-    override fun run() {
-        val tfidf = TFIDF(documentsRoot)
-            .rebuildDocumentIndex()
+    fun index() {
+        println("Indexing ...")
 
-        println("Ready for querying ...")
+        val start = System.currentTimeMillis()
+        tfidf.index().forEach { println("\t${it.absolutePath}") }
+        val stop = System.currentTimeMillis()
 
-        while (true) {
-            val query = readln()
-            val duration = measureTimeMillis {
-                val results = tfidf.query(query)
-                if (results.isEmpty()) {
-                    println("No results found")
-                } else {
-                    results.forEach { println(it) }
-                }
-            }.milliseconds
+        val duration = (stop - start).milliseconds
+        println("Indexing took $duration")
+        println()
+    }
 
+    fun query(query: String) {
+        println("Querying \"$query\" ...")
+
+        val start = System.currentTimeMillis()
+        val results = tfidf.query(query)
+        val stop = System.currentTimeMillis()
+
+        if (results.isEmpty()) {
+            println("\tNo results found")
+        } else {
+            results.forEach { println("\t$it") }
+
+            val duration = (stop - start).milliseconds
             println("Querying took $duration")
-            println()
         }
+
+        println()
     }
 }
