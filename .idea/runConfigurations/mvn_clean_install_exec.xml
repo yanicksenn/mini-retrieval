@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="mvn exec" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="mvn clean install exec" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -10,6 +10,8 @@
           </option>
           <option name="goals">
             <list>
+              <option value="clean" />
+              <option value="install" />
               <option value="exec:java" />
               <option value="-Dexec.args=$PROJECT_DIR$/src/test/resources/documents &quot;who is max verstappen&quot;" />
             </list>
