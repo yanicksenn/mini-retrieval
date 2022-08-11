@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
     require(args[1].isNotBlank()) { "query must not be blank" }
     val query = args[1]
 
-    val application = Application(documentsRoot)
-    application.index()
-    application.query(query)
+    Application(documentsRoot)
+        .index()
+        .query(query)
 }

@@ -9,7 +9,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class Application(documentsRoot: File) {
     private val tfidf = TFIDF(documentsRoot)
 
-    fun index() {
+    fun index(): Application {
         println("Indexing ...")
 
         val start = System.currentTimeMillis()
@@ -19,9 +19,11 @@ class Application(documentsRoot: File) {
         val duration = (stop - start).milliseconds
         println("Indexing took $duration")
         println()
+
+        return this
     }
 
-    fun query(query: String) {
+    fun query(query: String): Application {
         println("Querying \"$query\" ...")
 
         val start = System.currentTimeMillis()
@@ -38,5 +40,7 @@ class Application(documentsRoot: File) {
         }
 
         println()
+
+        return this
     }
 }
