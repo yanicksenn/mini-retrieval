@@ -1,6 +1,6 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.ranker.tfidf.TFIDF
+import com.yanicksenn.miniretrieval.ranker.tfidf.TfIdfRanker
 import java.io.File
 
 /**
@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
     require(args[1].isNotBlank()) { "query must not be blank" }
     val query = args[1]
 
-    Application(TFIDF(documentsRoot))
+    Application(TfIdfRanker(documentsRoot))
         .index()
         .query(query)
 }
