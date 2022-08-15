@@ -6,6 +6,7 @@ import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
 import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LanguageDeterminer
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
+import com.yanicksenn.miniretrieval.ranker.IRanker
 import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
 import com.yanicksenn.miniretrieval.to.Token
@@ -14,9 +15,9 @@ import com.yanicksenn.miniretrieval.tokenizer.TokenizersBuilder
 import java.io.File
 
 /**
- * TFIDF ranking model.
+ * The ranker using tf-idf based ranking model.
  */
-class TFIDF(private val documentsRoot: File) {
+class TFIDF(private val documentsRoot: File) : IRanker {
     private val lexicons = LexiconsBuilder.build()
     private val stemmers = StemmersBuilder.build()
     private val stopLists = StopListsBuilder.build()
@@ -26,12 +27,7 @@ class TFIDF(private val documentsRoot: File) {
     private val documentIndex = StringFrequencyByKey()
     private val tokenIndex = StringFrequencyByKey()
 
-    /**
-     * Rebuilds the document indexer based on the all
-     * files within the documents root which have not
-     * yet been indexed.
-     */
-    fun index(): Sequence<File> {
+    override fun index(): Sequence<File> {
         return documentsRoot.walk()
             .filter { it.isFile }
             .filterNot { documentIndex.contains(it.absolutePath) }
@@ -41,12 +37,7 @@ class TFIDF(private val documentsRoot: File) {
             }
     }
 
-    /**
-     * Queries the relevant documents based on the
-     * given raw query.
-     * @param rawQuery Raw query
-     */
-    fun query(rawQuery: String): List<IResult> {
+    override fun query(rawQuery: String): List<IResult> {
         val queryFrequency = StringFrequency()
         val tokens = tokenizeRawText(rawQuery)
         tokens.forEach { queryFrequency.add(it) }
