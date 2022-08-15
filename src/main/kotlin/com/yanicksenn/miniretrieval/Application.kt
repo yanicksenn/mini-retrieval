@@ -33,7 +33,7 @@ class Application(documentsRoot: File) {
         if (results.isEmpty()) {
             println("\tNo results found")
         } else {
-            results.forEach { println("\t${it.document.split("/").last()} - ${it.score}") }
+            results.forEach { println("\t${it.document.split("/").last()}") }
 
             val duration = (stop - start).milliseconds
             println("Querying took $duration")

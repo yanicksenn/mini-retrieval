@@ -73,4 +73,10 @@ class RSV(
         return queryFrequency.tf(token) * idf(token)
     }
 
+    /**
+     * Retrieval result with document and score.
+     */
+    data class Result(
+        override val document: String,
+        val score: Double) : IResult
 }
