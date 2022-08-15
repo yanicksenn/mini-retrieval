@@ -45,7 +45,7 @@ class TFIDF(private val documentsRoot: File) {
      * given raw query.
      * @param rawQuery Raw query
      */
-    fun query(rawQuery: String): List<RSV.Result> {
+    fun query(rawQuery: String): List<Result> {
         val queryFrequency = StringFrequency()
         val tokens = tokenizeRawText(rawQuery)
         tokens.forEach { queryFrequency.add(it) }

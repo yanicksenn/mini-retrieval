@@ -73,5 +73,4 @@ class RSV(
         return queryFrequency.tf(token) * idf(token)
     }
 
-    data class Result(val document: String, val score: Double)
 }
