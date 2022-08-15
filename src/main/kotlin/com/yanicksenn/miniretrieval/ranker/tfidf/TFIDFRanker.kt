@@ -17,7 +17,7 @@ import java.io.File
 /**
  * The ranker using tf-idf based ranking model.
  */
-class TfIdfRanker(private val documentsRoot: File) : IRanker {
+class TFIDFRanker(private val documentsRoot: File) : IRanker {
     private val lexicons = LexiconsBuilder.build()
     private val stemmers = StemmersBuilder.build()
     private val stopLists = StopListsBuilder.build()
