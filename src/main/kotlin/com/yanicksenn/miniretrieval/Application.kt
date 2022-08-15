@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval
 
+import com.yanicksenn.miniretrieval.ranker.tfidf.TFIDF
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 

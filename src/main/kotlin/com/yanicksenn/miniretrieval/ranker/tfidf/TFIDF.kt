@@ -1,5 +1,6 @@
-package com.yanicksenn.miniretrieval
+package com.yanicksenn.miniretrieval.ranker.tfidf
 
+import com.yanicksenn.miniretrieval.IResult
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
 import com.yanicksenn.miniretrieval.language.Language
