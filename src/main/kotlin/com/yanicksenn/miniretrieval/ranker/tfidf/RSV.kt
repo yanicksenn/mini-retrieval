@@ -8,6 +8,9 @@ import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+/**
+ * Retrieval status value calculator for tf-idf.
+ */
 class RSV(
     private val documentIndex: StringFrequencyByKey,
     private val tokenIndex: StringFrequencyByKey,
