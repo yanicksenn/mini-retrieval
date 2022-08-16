@@ -9,7 +9,7 @@ import com.yanicksenn.miniretrieval.language.LexiconsBuilder
 import com.yanicksenn.miniretrieval.ranker.IRanker
 import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
-import com.yanicksenn.miniretrieval.to.DocumentId
+import com.yanicksenn.miniretrieval.to.Document
 import com.yanicksenn.miniretrieval.to.Token
 import com.yanicksenn.miniretrieval.tokenizer.DefaultTokenizer
 import com.yanicksenn.miniretrieval.tokenizer.TokenizersBuilder
@@ -27,11 +27,11 @@ class TFIDFRanker : IRanker {
     private val documentIndex = StringFrequencyByKey()
     private val tokenIndex = StringFrequencyByKey()
 
-    override fun index(documentId: DocumentId, text: String) {
-        val tokens = tokenizeRawText(text)
+    override fun index(document: Document) {
+        val tokens = tokenizeRawText(document.text)
         tokens.forEach { token ->
-            documentIndex.add(documentId, token)
-            tokenIndex.add(token, documentId)
+            documentIndex.add(document.id, token)
+            tokenIndex.add(token, document.id)
         }
     }
 

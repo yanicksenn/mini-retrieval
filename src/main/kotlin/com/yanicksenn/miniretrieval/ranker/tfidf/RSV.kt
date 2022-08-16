@@ -81,6 +81,6 @@ class RSV(
      * Retrieval result with document-id and score.
      */
     data class Result(
-        override val documentId: String,
+        override val documentId: DocumentId,
         val score: Double) : IResult
 }

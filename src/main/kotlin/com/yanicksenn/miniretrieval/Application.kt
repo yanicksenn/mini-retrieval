@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.ranker.IRanker
+import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -50,8 +51,6 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
     }
 
     private fun IRanker.index(file: File) {
-        val document = file.absolutePath
-        val text = file.readText()
-        index(document, text)
+        index(Document(file.absolutePath, file.readText()))
     }
 }

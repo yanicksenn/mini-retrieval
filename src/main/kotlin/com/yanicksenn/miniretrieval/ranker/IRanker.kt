@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval.ranker
 
 import com.yanicksenn.miniretrieval.IResult
+import com.yanicksenn.miniretrieval.to.Document
 import com.yanicksenn.miniretrieval.to.DocumentId
 
 /**
@@ -10,11 +11,10 @@ import com.yanicksenn.miniretrieval.to.DocumentId
 interface IRanker {
 
     /**
-     * Indexes the given document-id and its text.
-     * @param documentId Document-Id
-     * @param text Text
+     * Adds the given document to the index.
+     * @param document Document
      */
-    fun index(documentId: DocumentId, text: String)
+    fun index(document: Document)
 
     /**
      * Queries the indexed documents based on the
