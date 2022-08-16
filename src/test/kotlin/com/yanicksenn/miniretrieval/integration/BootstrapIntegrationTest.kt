@@ -15,7 +15,7 @@ class BootstrapIntegrationTest : AbstractIntegrationTest() {
 
     @Test
     @Disabled
-    fun `program iterates through files in documents directory`() {
-        assertDoesNotThrow { runIntegrationTest(documentsDirectory.absolutePath) }
+    fun `should bootstrap application`() {
+        assertDoesNotThrow { runIntegrationTest("${documentsDirectory.absolutePath} \"who is max verstappen\"") }
     }
 }

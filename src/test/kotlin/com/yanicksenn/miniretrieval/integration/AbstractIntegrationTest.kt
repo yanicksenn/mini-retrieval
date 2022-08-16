@@ -75,13 +75,6 @@ abstract class AbstractIntegrationTest {
         main(args.toArgs())
     }
 
-    private fun String.toArgs(): Array<String> {
-        return split("\\s+")
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-            .toTypedArray()
-    }
-
     /**
      * Custom implementation of a teeing PrintStream.
      *
