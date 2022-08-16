@@ -9,15 +9,15 @@ import com.yanicksenn.miniretrieval.language.LexiconsBuilder
 import com.yanicksenn.miniretrieval.ranker.IRanker
 import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
+import com.yanicksenn.miniretrieval.to.Document
 import com.yanicksenn.miniretrieval.to.Token
 import com.yanicksenn.miniretrieval.tokenizer.DefaultTokenizer
 import com.yanicksenn.miniretrieval.tokenizer.TokenizersBuilder
-import java.io.File
 
 /**
  * The ranker using tf-idf based ranking model.
  */
-class TFIDFRanker(private val documentsRoot: File) : IRanker {
+class TFIDFRanker : IRanker {
     private val lexicons = LexiconsBuilder.build()
     private val stemmers = StemmersBuilder.build()
     private val stopLists = StopListsBuilder.build()
@@ -27,14 +27,12 @@ class TFIDFRanker(private val documentsRoot: File) : IRanker {
     private val documentIndex = StringFrequencyByKey()
     private val tokenIndex = StringFrequencyByKey()
 
-    override fun index(): Sequence<File> {
-        return documentsRoot.walk()
-            .filter { it.isFile }
-            .filterNot { documentIndex.contains(it.absolutePath) }
-            .map {
-                indexFile(it)
-                it
-            }
+    override fun index(document: Document, text: String) {
+        val tokens = tokenizeRawText(text)
+        tokens.forEach { token ->
+            documentIndex.add(document, token)
+            tokenIndex.add(token, document)
+        }
     }
 
     override fun query(rawQuery: String): List<IResult> {
@@ -43,21 +41,6 @@ class TFIDFRanker(private val documentsRoot: File) : IRanker {
         tokens.forEach { queryFrequency.add(it) }
 
         return RSV(documentIndex, tokenIndex, queryFrequency).query()
-    }
-
-    private fun indexFile(file: File) {
-        val (document, rawText) = parseFile(file)
-        val tokens = tokenizeRawText(rawText)
-        tokens.forEach { token ->
-            documentIndex.add(document, token)
-            tokenIndex.add(token, document)
-        }
-    }
-
-    private fun parseFile(file: File): Pair<String, String> {
-        val document = file.absolutePath
-        val rawText = file.readText()
-        return Pair(document, rawText)
     }
 
     private fun tokenizeRawText(textRaw: String): List<Token> {

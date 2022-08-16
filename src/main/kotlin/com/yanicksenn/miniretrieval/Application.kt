@@ -1,18 +1,24 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.ranker.IRanker
+import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Wrapper for the actual business logic.
  */
-class Application(private val ranker: IRanker) {
+class Application(private val documentsRoot: File, private val ranker: IRanker) {
 
     fun index(): Application {
         println("Indexing ...")
 
         val start = System.currentTimeMillis()
-        ranker.index().forEach { println("\t${it.absolutePath}") }
+        documentsRoot.walk()
+            .filter { it.isFile }
+            .forEach {
+                println("\t${it.absolutePath}")
+                ranker.index(it)
+            }
         val stop = System.currentTimeMillis()
 
         val duration = (stop - start).milliseconds
@@ -41,5 +47,11 @@ class Application(private val ranker: IRanker) {
         println()
 
         return this
+    }
+
+    private fun IRanker.index(file: File) {
+        val document = file.absolutePath
+        val text = file.readText()
+        index(document, text)
     }
 }

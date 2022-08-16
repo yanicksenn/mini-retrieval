@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
     require(args[1].isNotBlank()) { "query must not be blank" }
     val query = args[1]
 
-    Application(TFIDFRanker(documentsRoot))
+    Application(documentsRoot, TFIDFRanker())
         .index()
         .query(query)
 }

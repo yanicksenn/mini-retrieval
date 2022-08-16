@@ -1,7 +1,7 @@
 package com.yanicksenn.miniretrieval.ranker
 
 import com.yanicksenn.miniretrieval.IResult
-import java.io.File
+import com.yanicksenn.miniretrieval.to.Document
 
 /**
  * A ranker returns a list of results to a given
@@ -10,9 +10,11 @@ import java.io.File
 interface IRanker {
 
     /**
-     * Builds the index that is used for querying.
+     * Indexes the given document and its text.
+     * @param document Document
+     * @param text Text
      */
-    fun index(): Sequence<File>
+    fun index(document: Document, text: String)
 
     /**
      * Queries the indexed documents based on the
