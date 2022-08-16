@@ -3,7 +3,7 @@ package com.yanicksenn.miniretrieval.ranker.tfidf
 import com.yanicksenn.miniretrieval.IResult
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
-import com.yanicksenn.miniretrieval.to.Document
+import com.yanicksenn.miniretrieval.to.DocumentId
 import com.yanicksenn.miniretrieval.to.Token
 import kotlin.math.log10
 import kotlin.math.pow
@@ -46,8 +46,8 @@ class RSV(
             .map { Result(it.first, it.second) }
     }
 
-    private fun StringFrequencyByKey.tf(document: Document, token: Token): Double {
-        return log10(1.0 + this[document][token])
+    private fun StringFrequencyByKey.tf(documentId: DocumentId, token: Token): Double {
+        return log10(1.0 + this[documentId][token])
     }
 
     private fun StringFrequency.tf(token: Token): Double {
@@ -59,13 +59,13 @@ class RSV(
     }
 
 
-    private fun dNorm(document: Document): Double {
-        val tokens = documentIndex.getOrElse(document) { StringFrequency() }
-        return sqrt(tokens.keys.sumOf { a(document, it).pow(2) })
+    private fun dNorm(documentId: DocumentId): Double {
+        val tokens = documentIndex.getOrElse(documentId) { StringFrequency() }
+        return sqrt(tokens.keys.sumOf { a(documentId, it).pow(2) })
     }
 
-    private fun a(document: Document, token: Token): Double {
-        return documentIndex.tf(document, token) * idf(token)
+    private fun a(documentId: DocumentId, token: Token): Double {
+        return documentIndex.tf(documentId, token) * idf(token)
     }
 
 
@@ -78,9 +78,9 @@ class RSV(
     }
 
     /**
-     * Retrieval result with document and score.
+     * Retrieval result with document-id and score.
      */
     data class Result(
-        override val document: String,
+        override val documentId: String,
         val score: Double) : IResult
 }

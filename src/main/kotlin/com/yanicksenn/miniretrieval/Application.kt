@@ -38,7 +38,7 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
         if (results.isEmpty()) {
             println("\tNo results found")
         } else {
-            results.forEach { println("\t${it.document.split("/").last()}") }
+            results.forEach { println("\t${it.documentId.split("/").last()}") }
 
             val duration = (stop - start).milliseconds
             println("Querying took $duration")

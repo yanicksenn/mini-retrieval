@@ -1,10 +1,10 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.to.Document
+import com.yanicksenn.miniretrieval.to.DocumentId
 
 /**
- * Retrieval result of a document.
+ * Retrieval result of a document-id.
  */
 interface IResult {
-    val document: Document
+    val documentId: DocumentId
 }
