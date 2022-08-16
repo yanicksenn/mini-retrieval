@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval
 
+import com.yanicksenn.miniretrieval.adapter.PlainTextDocumentParser
 import com.yanicksenn.miniretrieval.ranker.IRanker
 import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
@@ -16,8 +17,9 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
         val start = System.currentTimeMillis()
         documentsRoot.walk()
             .filter { it.isFile }
+            .flatMap { parse(it) }
             .forEach {
-                println("\t${it.absolutePath}")
+                println("\t${it.id}")
                 ranker.index(it)
             }
         val stop = System.currentTimeMillis()
@@ -39,7 +41,7 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
         if (results.isEmpty()) {
             println("\tNo results found")
         } else {
-            results.forEach { println("\t${it.documentId.split("/").last()}") }
+            results.forEach { println("\t${it.documentId}") }
         }
 
         val duration = (stop - start).milliseconds
@@ -49,7 +51,9 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
         return this
     }
 
-    private fun IRanker.index(file: File) {
-        index(Document(file.absolutePath, file.readText()))
+    private fun parse(file: File): Sequence<Document> {
+        return when (file.extension) {
+            else -> PlainTextDocumentParser.parse(file)
+        }
     }
 }
