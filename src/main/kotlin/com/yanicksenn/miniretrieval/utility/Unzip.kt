@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval.utility
 
+import java.io.File
 import java.io.InputStream
 import java.nio.charset.Charset
 import java.nio.file.Path
@@ -10,8 +11,8 @@ import java.util.zip.ZipInputStream
  * @param targetPath Target path
  * @param charset Charset
  */
-fun InputStream.unzipTo(targetPath: Path, charset: Charset = Charsets.UTF_8) {
-    ZipInputStream(this, charset).use { inputStream ->
+fun File.unzipTo(targetPath: Path, charset: Charset = Charsets.UTF_8) {
+    ZipInputStream(inputStream(), charset).use { inputStream ->
         var entry = inputStream.nextEntry
         while (entry != null) {
             val entryPath = targetPath.resolve(entry.name)
