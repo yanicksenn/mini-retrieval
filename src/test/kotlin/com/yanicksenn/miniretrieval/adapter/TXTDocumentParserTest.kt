@@ -1,34 +1,42 @@
 package com.yanicksenn.miniretrieval.adapter
 
 import com.yanicksenn.miniretrieval.to.Document
+import com.yanicksenn.miniretrieval.to.DocumentId
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import java.nio.file.Path
 import kotlin.test.assertEquals
 
 class TXTDocumentParserTest {
 
     @TempDir
-    lateinit var documentsRoot: File
+    lateinit var documentsRoot: Path
 
     @Test
-    fun `should yield a single document`() {
-        val file = "Hello, World!".writeInto("MyText.txt")
-        val result = TXTDocumentParser.parse(file).toList()
-        assertEquals(1, result.size)
+    fun `should parse txt file`() {
+        val file = copyTempResource("/com/yanicksenn/miniretrieval/adapter/example.txt")
+
+        val documents = TXTDocumentParser.parse(file).toList()
+        assertEquals(1, documents.size)
+        documents.assertDocumentMatches(file.absolutePath, "\\s*Page 1\\s*".toRegex())
     }
 
-    @Test
-    fun `should yield a document with the correct text`() {
-        val file = "Hello, World!".writeInto("MyText.txt")
-        val result = TXTDocumentParser.parse(file).first()
-        assertEquals(Document(file.absolutePath, "Hello, World!"), result)
-    }
-
-    private fun String.writeInto(fileName: String): File {
-        val file = File(documentsRoot, fileName)
+    /**
+     * Copy a resource to a temporary location to be able
+     * fully interact with it.
+     * @param resourceName Name of the resource
+     */
+    private fun copyTempResource(resourceName: String): File {
+        val inputStream = javaClass.getResourceAsStream(resourceName)!!
+        val fileName = resourceName.split("/").last()
+        val file = documentsRoot.resolve(fileName).toFile()
         file.createNewFile()
-        file.writeText(this)
+        file.outputStream().use { inputStream.transferTo(it) }
         return file
+    }
+
+    private fun List<Document>.assertDocumentMatches(documentId: DocumentId, pattern: Regex) {
+        kotlin.test.assertTrue(filter { it.id == documentId }.any { it.text.matches(pattern) })
     }
 }
