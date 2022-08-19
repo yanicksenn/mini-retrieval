@@ -15,7 +15,9 @@ fun main(args: Array<String>) {
     require(args[1].isNotBlank()) { "query must not be blank" }
     val query = args[1]
 
+    val maxResults = if (args.size >= 3) args[3].toInt() else 10
+
     Application(documentsRoot, TFIDFRanker())
         .index()
-        .query(query)
+        .query(query, maxResults)
 }
