@@ -20,9 +20,9 @@ class PPTXDocumentParserTest {
 
         val documents = PPTXDocumentParser.parse(file).toList()
         assertEquals(3, documents.size)
-        documents.assertDocumentMatches("${file.absolutePath}#0", "\\s+Page 1\\s+".toRegex())
-        documents.assertDocumentMatches("${file.absolutePath}#1", "\\s+Page 2\\s+".toRegex())
-        documents.assertDocumentMatches("${file.absolutePath}#2", "\\s+Page 3\\s+".toRegex())
+        documents.assertDocumentMatches("${file.absolutePath}#1", "\\s+Page 1\\s+".toRegex())
+        documents.assertDocumentMatches("${file.absolutePath}#2", "\\s+Page 2\\s+".toRegex())
+        documents.assertDocumentMatches("${file.absolutePath}#3", "\\s+Page 3\\s+".toRegex())
     }
 
 

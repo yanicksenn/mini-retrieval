@@ -18,17 +18,17 @@ object PPTXDocumentParser : IDocumentParser {
             tmpPath.resolve("ppt").resolve("slides")
                 .toFile()
                 .listFiles { file -> file.isSlideXML }!!
-                .reversed()
-                .map { it.readText() }
-                .map { it.removeXMLTags() }
-                .withIndex()
-                .map { (i, text) -> Document("$documentIdPrefix#$i", text) }
+                .map { it.nameWithoutExtension to it.readText().removeXMLTags() }
+                .map { (name, text) -> Document("$documentIdPrefix#${name.slideNumber}", text) }
                 .forEach { yield(it) }
 
             val tmpFile = tmpPath.toFile()
             tmpFile.deleteRecursively()
         }
     }
+
+    private val String.slideNumber: String
+        get() = lowercase().replace("slide", "")
 
     private val File.isSlideXML: Boolean
         get() = name.lowercase().startsWith("slide") && extension.lowercase() == "xml"
