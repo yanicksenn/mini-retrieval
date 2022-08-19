@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval
 
+import com.yanicksenn.miniretrieval.adapter.PDFDocumentParser
 import com.yanicksenn.miniretrieval.adapter.PPTXDocumentParser
  import com.yanicksenn.miniretrieval.adapter.TXTDocumentParser
 import com.yanicksenn.miniretrieval.ranker.IRanker
@@ -54,6 +55,7 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
 
     private fun parse(file: File): Sequence<Document> {
         return when (file.extension.lowercase()) {
+            "pdf" -> PDFDocumentParser.parse(file)
             "pptx" -> PPTXDocumentParser.parse(file)
             else -> TXTDocumentParser.parse(file)
         }
