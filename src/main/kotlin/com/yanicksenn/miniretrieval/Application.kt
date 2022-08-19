@@ -1,7 +1,7 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.adapter.PPTXDocumentParser
-import com.yanicksenn.miniretrieval.adapter.PlainTextDocumentParser
+ import com.yanicksenn.miniretrieval.adapter.TXTDocumentParser
 import com.yanicksenn.miniretrieval.ranker.IRanker
 import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
@@ -55,7 +55,7 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
     private fun parse(file: File): Sequence<Document> {
         return when (file.extension.lowercase()) {
             "pptx" -> PPTXDocumentParser.parse(file)
-            else -> PlainTextDocumentParser.parse(file)
+            else -> TXTDocumentParser.parse(file)
         }
     }
 }

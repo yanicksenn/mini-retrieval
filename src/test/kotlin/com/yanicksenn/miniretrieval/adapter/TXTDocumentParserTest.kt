@@ -6,7 +6,7 @@ import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import kotlin.test.assertEquals
 
-class PlainTextDocumentParserTest {
+class TXTDocumentParserTest {
 
     @TempDir
     lateinit var documentsRoot: File
@@ -14,14 +14,14 @@ class PlainTextDocumentParserTest {
     @Test
     fun `should yield a single document`() {
         val file = "Hello, World!".writeInto("MyText.txt")
-        val result = PlainTextDocumentParser.parse(file).toList()
+        val result = TXTDocumentParser.parse(file).toList()
         assertEquals(1, result.size)
     }
 
     @Test
     fun `should yield a document with the correct text`() {
         val file = "Hello, World!".writeInto("MyText.txt")
-        val result = PlainTextDocumentParser.parse(file).first()
+        val result = TXTDocumentParser.parse(file).first()
         assertEquals(Document(file.absolutePath, "Hello, World!"), result)
     }
 

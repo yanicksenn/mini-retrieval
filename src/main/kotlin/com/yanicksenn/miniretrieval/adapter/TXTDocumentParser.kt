@@ -6,7 +6,7 @@ import java.io.File
 /**
  * Parses plain text files completely.
  */
-object PlainTextDocumentParser : IDocumentParser {
+object TXTDocumentParser : IDocumentParser {
 
     override fun parse(file: File): Sequence<Document> {
         return sequence {
