@@ -6,6 +6,7 @@ import com.yanicksenn.miniretrieval.adapter.PPTXDocumentParser
 import com.yanicksenn.miniretrieval.ranker.IRanker
 import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
+import kotlin.math.log10
 import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -14,6 +15,10 @@ import kotlin.time.Duration.Companion.milliseconds
  */
 class Application(private val documentsRoot: File, private val ranker: IRanker) {
 
+    /**
+     * Indexes all files within the documents root that
+     * have a known file extension.
+     */
     fun index(): Application {
         println("Indexing ...")
 
@@ -34,18 +39,27 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
         return this
     }
 
-    fun query(query: String): Application {
+    /**
+     * Queries the n best results of the given query within
+     * the indexed documents.
+     * @param query Query
+     * @param maxResults Max amount of results
+     */
+    fun query(query: String, maxResults: Int = 10): Application {
         println("Querying \"$query\" ...")
 
         val start = System.currentTimeMillis()
         val results = ranker.query(query)
-        val bestResults = results.take(min(results.size, 10))
+        val bestResults = results.take(min(results.size, maxResults))
         val stop = System.currentTimeMillis()
 
         if (bestResults.isEmpty()) {
             println("\tNo results found")
         } else {
-            bestResults.forEach { println("\t${it.documentId}") }
+            val paddingLength = calculatePadding(maxResults)
+            bestResults.withIndex().forEach { (i, document) ->
+                println("\t${(i + 1).toString().padStart(paddingLength)}. ${document.documentId}")
+            }
         }
 
         val duration = (stop - start).milliseconds
@@ -54,6 +68,8 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
 
         return this
     }
+
+    private fun calculatePadding(maxResults: Int) = (log10(maxResults.toDouble()) + 1).toInt()
 
     private fun parse(file: File): Sequence<Document> {
         return when (file.extension.lowercase()) {
