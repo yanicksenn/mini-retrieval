@@ -6,6 +6,7 @@ import com.yanicksenn.miniretrieval.adapter.PPTXDocumentParser
 import com.yanicksenn.miniretrieval.ranker.IRanker
 import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
+import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
@@ -38,12 +39,13 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
 
         val start = System.currentTimeMillis()
         val results = ranker.query(query)
+        val bestResults = results.take(min(results.size, 10))
         val stop = System.currentTimeMillis()
 
-        if (results.isEmpty()) {
+        if (bestResults.isEmpty()) {
             println("\tNo results found")
         } else {
-            results.forEach { println("\t${it.documentId}") }
+            bestResults.forEach { println("\t${it.documentId}") }
         }
 
         val duration = (stop - start).milliseconds
@@ -57,7 +59,8 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
         return when (file.extension.lowercase()) {
             "pdf" -> PDFDocumentParser.parse(file)
             "pptx" -> PPTXDocumentParser.parse(file)
-            else -> TXTDocumentParser.parse(file)
+            "txt" -> TXTDocumentParser.parse(file)
+            else -> emptySequence()
         }
     }
 }
