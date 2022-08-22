@@ -74,7 +74,7 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
     private fun parse(file: File): Sequence<Document> {
         return when (file.extension.lowercase()) {
             "pdf" -> PDFDocumentParser.parse(file)
-            "pptx" -> PPTDocumentParser.parse(file)
+            "pptx", "ppt" -> PPTDocumentParser.parse(file)
             "txt" -> TXTDocumentParser.parse(file)
             else -> emptySequence()
         }
