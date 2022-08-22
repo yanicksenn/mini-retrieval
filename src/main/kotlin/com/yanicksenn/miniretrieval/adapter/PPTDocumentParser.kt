@@ -7,7 +7,7 @@ import java.io.File
 import java.nio.file.Files
 
 
-object PPTXDocumentParser : IDocumentParser {
+object PPTDocumentParser : IDocumentParser {
 
     private const val slidePath = "ppt/slides"
 

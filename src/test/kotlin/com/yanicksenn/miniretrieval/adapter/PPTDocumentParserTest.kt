@@ -9,7 +9,7 @@ import java.nio.file.Path
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class PPTXDocumentParserTest {
+class PPTDocumentParserTest {
 
     @TempDir
     lateinit var documentRoot: Path
@@ -18,7 +18,7 @@ class PPTXDocumentParserTest {
     fun `should parse pptx file`() {
         val file = copyTempResource("/com/yanicksenn/miniretrieval/adapter/example.pptx")
 
-        val documents = PPTXDocumentParser.parse(file).toList()
+        val documents = PPTDocumentParser.parse(file).toList()
         assertEquals(3, documents.size)
         documents.assertDocumentMatches("${file.absolutePath}#1", "\\s+Page 1\\s+".toRegex())
         documents.assertDocumentMatches("${file.absolutePath}#2", "\\s+Page 2\\s+".toRegex())
