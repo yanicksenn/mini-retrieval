@@ -1,10 +1,11 @@
 package com.yanicksenn.miniretrieval.adapter
 
 import com.yanicksenn.miniretrieval.to.Document
+import com.yanicksenn.miniretrieval.utility.StreamableZipEntry
 import com.yanicksenn.miniretrieval.utility.asSequence
+import com.yanicksenn.miniretrieval.utility.asZipInputStream
 import com.yanicksenn.miniretrieval.utility.transformer.removeXMLTags
 import java.io.File
-import java.nio.file.Files
 
 
 object PPTDocumentParser : IDocumentParser {
@@ -12,30 +13,41 @@ object PPTDocumentParser : IDocumentParser {
     private const val slidePath = "ppt/slides"
 
     override fun parse(file: File): Sequence<Document> {
+        val documentIdPrefix = file.absolutePath
+
+        fun StreamableZipEntry.toDocument(): Document {
+            val documentId = "$documentIdPrefix#${slideNumber}"
+            val text = readText().removeXMLTags()
+            return Document(documentId, text)
+        }
+
         return sequence {
-            val tmpPath = Files.createTempDirectory(file.name)
-            val tmpFile = tmpPath.toFile()
-
-            file.asSequence()
-                .filter { it.entry.name.contains(slidePath) }
-                .forEach { it unzipTo tmpPath }
-
-            val documentIdPrefix = file.absolutePath
-            tmpPath.resolve(slidePath)
-                .toFile()
-                .listFiles { file -> file.isSlideXML }!!
-                .map { it.nameWithoutExtension to it.readText().removeXMLTags() }
-                .map { (name, text) -> Document("$documentIdPrefix#${name.slideNumber}", text) }
+            file.asZipInputStream()
+                .asSequence()
+                .filter { it.isSlide() }
+                .map { it.toDocument() }
                 .forEach { yield(it) }
-
-            tmpFile.deleteRecursively()
         }
     }
 
-    private val String.slideNumber: String
-        get() = lowercase().replace("slide", "")
+    private fun StreamableZipEntry.isSlide(): Boolean {
+        return entry.name
+            .lowercase()
+            .matches("$slidePath/slide\\d+.xml".toRegex())
+    }
 
-    private val File.isSlideXML: Boolean
-        get() = name.lowercase().startsWith("slide") && extension.lowercase() == "xml"
+    private fun StreamableZipEntry.readText(): String {
+        return inputStream.bufferedReader().readText()
+    }
 
+    private val StreamableZipEntry.slideNumber: String
+        get() {
+            val name = entry.name.lowercase()
+            val startIndex = slidePath.length + 6 // +6 because the slides have a "/slide" prefix
+            val endIndex = name.length - 4 // -4 because the slides have a ".xml" suffix
+
+            // ppt/slides/slide1.xml -> 1
+            // ppt/slides/slide27.xml -> 27
+            return name.substring(startIndex, endIndex)
+        }
 }

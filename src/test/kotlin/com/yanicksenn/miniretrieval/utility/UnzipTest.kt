@@ -16,6 +16,7 @@ class UnzipTest {
     @Test
     fun `should iterate through all entries`() {
         copyTempResource("/com/yanicksenn/miniretrieval/utility/example.zip")
+            .asZipInputStream()
             .asSequence()
             .map { it.entry.name }
             .toHashSet()
@@ -28,6 +29,7 @@ class UnzipTest {
     fun `should unzip a zip-file`() {
         val targetPath = documentRoot.resolve("example")
         copyTempResource("/com/yanicksenn/miniretrieval/utility/example.zip")
+            .asZipInputStream()
             .asSequence()
             .forEach { it unzipTo targetPath }
 
@@ -40,6 +42,7 @@ class UnzipTest {
     fun `should partially unzip a zip-file`() {
         val targetPath = documentRoot.resolve("example")
         copyTempResource("/com/yanicksenn/miniretrieval/utility/example.zip")
+            .asZipInputStream()
             .asSequence()
             .filter { it.entry.name.contains("File3") }
             .forEach { it unzipTo targetPath }

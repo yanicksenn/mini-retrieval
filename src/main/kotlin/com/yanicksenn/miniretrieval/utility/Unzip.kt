@@ -2,19 +2,27 @@ package com.yanicksenn.miniretrieval.utility
 
 import java.io.File
 import java.io.InputStream
-import java.io.OutputStream
-import java.lang.Thread.yield
 import java.nio.charset.Charset
 import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 /**
- * Returns a sequence of wrapped zip entries.
+ * Returns a zip input stream of this file.
+ * @param charset Charset
  */
-fun File.asSequence(charset: Charset = Charsets.UTF_8): Sequence<StreamableZipEntry> {
+fun File.asZipInputStream(charset: Charset = Charsets.UTF_8): ZipInputStream {
+    return ZipInputStream(inputStream(), charset)
+}
+
+/**
+ * Returns a sequence of wrapped zip entries.
+ * The input stream provided by the entries
+ * will automatically be closed.
+ */
+fun ZipInputStream.asSequence(): Sequence<StreamableZipEntry> {
     return sequence {
-        ZipInputStream(inputStream(), charset).use { inputStream ->
+        use { inputStream ->
             var entry = inputStream.nextEntry
             while (entry != null) {
                 if (!entry.isDirectory)
