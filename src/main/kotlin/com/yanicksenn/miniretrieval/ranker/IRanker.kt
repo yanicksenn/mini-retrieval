@@ -1,8 +1,6 @@
 package com.yanicksenn.miniretrieval.ranker
 
-import com.yanicksenn.miniretrieval.IResult
 import com.yanicksenn.miniretrieval.to.Document
-import com.yanicksenn.miniretrieval.to.DocumentId
 
 /**
  * A ranker returns a list of results to a given
@@ -22,5 +20,5 @@ interface IRanker {
      * beginning with the most relevant.
      * @param rawQuery Raw query
      */
-    fun query(rawQuery: String): List<IResult>
+    fun query(rawQuery: String): List<RankerResult>
 }

@@ -57,8 +57,8 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
             println("\tNo results found")
         } else {
             val paddingLength = calculatePadding(maxResults)
-            bestResults.withIndex().forEach { (i, document) ->
-                println("\t${(i + 1).toString().padStart(paddingLength)}. ${document.documentId}")
+            bestResults.withIndex().forEach { (i, result) ->
+                println("\t${(i + 1).toString().padStart(paddingLength)}. ${result.documentId} (${result.score})")
             }
         }
 

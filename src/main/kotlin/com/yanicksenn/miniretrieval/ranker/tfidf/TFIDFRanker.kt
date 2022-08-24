@@ -1,12 +1,12 @@
 package com.yanicksenn.miniretrieval.ranker.tfidf
 
-import com.yanicksenn.miniretrieval.IResult
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
 import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LanguageDeterminer
 import com.yanicksenn.miniretrieval.language.LexiconsBuilder
 import com.yanicksenn.miniretrieval.ranker.IRanker
+import com.yanicksenn.miniretrieval.ranker.RankerResult
 import com.yanicksenn.miniretrieval.stemmer.StemmersBuilder
 import com.yanicksenn.miniretrieval.stoplist.StopListsBuilder
 import com.yanicksenn.miniretrieval.to.Document
@@ -35,7 +35,7 @@ class TFIDFRanker : IRanker {
         }
     }
 
-    override fun query(rawQuery: String): List<IResult> {
+    override fun query(rawQuery: String): List<RankerResult> {
         val queryFrequency = StringFrequency()
         val tokens = tokenizeRawText(rawQuery)
         tokens.forEach { queryFrequency.add(it) }
