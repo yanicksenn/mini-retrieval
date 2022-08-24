@@ -38,7 +38,8 @@ class RSV(
         for ((document, score) in accumulator) {
             val dNorm = dNorm(document)
             val sNorm = score / (dNorm * qNorm)
-            accumulator[document] = sNorm
+            val documentWeight = minOf(documentIndex[document].entries.sumOf { it.value } / 30.0, 1.0)
+            accumulator[document] = sNorm * documentWeight
         }
 
         return accumulator.toList()
