@@ -11,6 +11,7 @@ import java.io.File
 object PPTDocumentParser : IDocumentParser {
 
     private const val slidePath = "ppt/slides"
+    private val slideRegex = "$slidePath/slide\\d+.xml".toRegex()
 
     override fun parse(file: File): Sequence<Document> {
         val documentIdPrefix = file.absolutePath
@@ -33,7 +34,7 @@ object PPTDocumentParser : IDocumentParser {
     private fun StreamableZipEntry.isSlide(): Boolean {
         return entry.name
             .lowercase()
-            .matches("$slidePath/slide\\d+.xml".toRegex())
+            .matches(slideRegex)
     }
 
     private fun StreamableZipEntry.readText(): String {
