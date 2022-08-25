@@ -4,6 +4,7 @@ import com.yanicksenn.miniretrieval.adapter.PDFDocumentParser
 import com.yanicksenn.miniretrieval.adapter.PPTDocumentParser
  import com.yanicksenn.miniretrieval.adapter.TXTDocumentParser
 import com.yanicksenn.miniretrieval.ranker.IRanker
+import com.yanicksenn.miniretrieval.ranker.RankerResult
 import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
 import kotlin.math.log10
@@ -53,14 +54,7 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
         val bestResults = results.take(min(results.size, maxResults))
         val stop = System.currentTimeMillis()
 
-        if (bestResults.isEmpty()) {
-            println("\tNo results found")
-        } else {
-            val paddingLength = calculatePadding(maxResults)
-            bestResults.withIndex().forEach { (i, result) ->
-                println("\t${(i + 1).toString().padStart(paddingLength)}. ${result.documentId} (${result.score})")
-            }
-        }
+        bestResults.printResults()
 
         val duration = (stop - start).milliseconds
         println("Querying took $duration")
@@ -69,7 +63,17 @@ class Application(private val documentsRoot: File, private val ranker: IRanker) 
         return this
     }
 
-    private fun calculatePadding(maxResults: Int) = (log10(maxResults.toDouble()) + 1).toInt()
+    private fun List<RankerResult>.printResults() {
+        if (isEmpty()) {
+            println("\tNo results found")
+
+        } else {
+            val paddingLength = (log10(size.toDouble()) + 1).toInt()
+            withIndex().forEach { (i, result) ->
+                println("\t${(i + 1).toString().padStart(paddingLength)}. ${result.documentId} (${result.score})")
+            }
+        }
+    }
 
     private fun parse(file: File): Sequence<Document> {
         return when (file.extension.lowercase()) {
