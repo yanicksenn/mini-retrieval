@@ -10,12 +10,11 @@ import com.yanicksenn.miniretrieval.to.Document
  */
 class TFIDFRanker {
     private val tokenizer = TFIDFTokenizer
-
     private val documentIndex = StringFrequencyByKey()
     private val tokenIndex = StringFrequencyByKey()
 
     fun index(document: Document) {
-        val tokens = TFIDFTokenizer.tokenize(document.text)
+        val tokens = tokenizer.tokenize(document.text)
         tokens.forEach { token ->
             documentIndex.add(document.id, token)
             tokenIndex.add(token, document.id)
@@ -24,7 +23,7 @@ class TFIDFRanker {
 
     fun query(rawQuery: String): List<DocumentResult> {
         val queryFrequency = StringFrequency()
-        val tokens = TFIDFTokenizer.tokenize(rawQuery)
+        val tokens = tokenizer.tokenize(rawQuery)
         tokens.forEach { queryFrequency.add(it) }
 
         return TFIDFRSV(documentIndex, tokenIndex, queryFrequency).query()
