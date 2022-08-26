@@ -9,16 +9,16 @@ import kotlin.math.min
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * Wrapper for the actual business logic.
+ * Application taking care indexing and querying with tf-idf.
  */
-class Application(private val documentsRoot: File) {
+class TFIDFApplication(private val documentsRoot: File) {
     private val ranker = TFIDFRanker()
 
     /**
      * Indexes all files within the documents root that
      * have a known file extension.
      */
-    fun index(): Application {
+    fun index(): TFIDFApplication {
         println("Indexing ...")
 
         val start = System.currentTimeMillis()
@@ -44,7 +44,7 @@ class Application(private val documentsRoot: File) {
      * @param query Query
      * @param maxResults Max amount of results
      */
-    fun query(query: String, maxResults: Int = 10): Application {
+    fun query(query: String, maxResults: Int = 10): TFIDFApplication {
         println("Querying \"$query\" ...")
 
         val start = System.currentTimeMillis()

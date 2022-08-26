@@ -1,6 +1,5 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.ranker.tfidf.TFIDFRanker
 import java.io.File
 
 /**
@@ -17,7 +16,7 @@ fun main(args: Array<String>) {
 
     val maxResults = if (args.size >= 3) args[3].toInt() else 10
 
-    Application(documentsRoot)
+    TFIDFApplication(documentsRoot)
         .index()
         .query(query, maxResults)
 }
