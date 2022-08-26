@@ -11,7 +11,7 @@
           <option name="goals">
             <list>
               <option value="exec:java" />
-              <option value="-Dexec.args=$PROJECT_DIR$/src/test/resources/documents &quot;who is max verstappen&quot;" />
+              <option value="-Dexec.args=$PROJECT_DIR$/../lectures &quot;who is max verstappen&quot;" />
             </list>
           </option>
           <option name="pomFileName" />

@@ -1,6 +1,6 @@
-package com.yanicksenn.miniretrieval.adapter
+package com.yanicksenn.miniretrieval.parser
 
-import com.yanicksenn.miniretrieval.adapter.pdfbox.PDFBoxDocumentParser
+import com.yanicksenn.miniretrieval.parser.pdfbox.PDFBoxDocumentParser
 import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
 

@@ -1,6 +1,6 @@
-package com.yanicksenn.miniretrieval.adapter.pdfbox
+package com.yanicksenn.miniretrieval.parser.pdfbox
 
-import com.yanicksenn.miniretrieval.adapter.IDocumentParser
+import com.yanicksenn.miniretrieval.parser.IDocumentParser
 import com.yanicksenn.miniretrieval.to.Document
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper

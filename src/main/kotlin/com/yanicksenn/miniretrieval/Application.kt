@@ -1,8 +1,8 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.adapter.PDFDocumentParser
-import com.yanicksenn.miniretrieval.adapter.PPTDocumentParser
- import com.yanicksenn.miniretrieval.adapter.TXTDocumentParser
+import com.yanicksenn.miniretrieval.parser.PDFDocumentParser
+import com.yanicksenn.miniretrieval.parser.PPTDocumentParser
+ import com.yanicksenn.miniretrieval.parser.TXTDocumentParser
 import com.yanicksenn.miniretrieval.ranker.RankerResult
 import com.yanicksenn.miniretrieval.ranker.tfidf.TFIDFRanker
 import com.yanicksenn.miniretrieval.to.Document

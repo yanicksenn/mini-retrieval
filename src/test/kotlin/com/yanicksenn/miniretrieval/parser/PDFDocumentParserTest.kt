@@ -1,4 +1,4 @@
-package com.yanicksenn.miniretrieval.adapter
+package com.yanicksenn.miniretrieval.parser
 
 import com.yanicksenn.miniretrieval.to.Document
 import com.yanicksenn.miniretrieval.to.DocumentId
@@ -15,7 +15,7 @@ class PDFDocumentParserTest {
 
     @Test
     fun `should parse pdf file`() {
-        val file = copyTempResource("/com/yanicksenn/miniretrieval/adapter/example.pdf")
+        val file = copyTempResource("/com/yanicksenn/miniretrieval/parser/example.pdf")
 
         val documents = PDFDocumentParser.parse(file).toList()
         assertEquals(3, documents.size)
