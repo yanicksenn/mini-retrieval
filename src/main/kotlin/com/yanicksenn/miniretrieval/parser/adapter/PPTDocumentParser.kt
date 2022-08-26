@@ -1,5 +1,6 @@
-package com.yanicksenn.miniretrieval.parser
+package com.yanicksenn.miniretrieval.parser.adapter
 
+import com.yanicksenn.miniretrieval.parser.IDocumentParser
 import com.yanicksenn.miniretrieval.to.Document
 import com.yanicksenn.miniretrieval.utility.StreamableZipEntry
 import com.yanicksenn.miniretrieval.utility.asSequence

@@ -1,8 +1,9 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.parser.PDFDocumentParser
-import com.yanicksenn.miniretrieval.parser.PPTDocumentParser
- import com.yanicksenn.miniretrieval.parser.TXTDocumentParser
+import com.yanicksenn.miniretrieval.parser.AnyDocumentParser
+import com.yanicksenn.miniretrieval.parser.adapter.PDFDocumentParser
+import com.yanicksenn.miniretrieval.parser.adapter.PPTDocumentParser
+ import com.yanicksenn.miniretrieval.parser.adapter.TXTDocumentParser
 import com.yanicksenn.miniretrieval.ranker.RankerResult
 import com.yanicksenn.miniretrieval.ranker.tfidf.TFIDFRanker
 import com.yanicksenn.miniretrieval.to.Document
@@ -27,7 +28,7 @@ class Application(private val documentsRoot: File) {
         val start = System.currentTimeMillis()
         documentsRoot.walk()
             .filter { it.isFile }
-            .flatMap { parse(it) }
+            .flatMap { AnyDocumentParser.parse(it) }
             .forEach {
                 println("\t${it.id}")
                 ranker.index(it)
@@ -73,15 +74,6 @@ class Application(private val documentsRoot: File) {
             withIndex().forEach { (i, result) ->
                 println("\t${(i + 1).toString().padStart(paddingLength)}. ${result.documentId} (${result.score})")
             }
-        }
-    }
-
-    private fun parse(file: File): Sequence<Document> {
-        return when (file.extension.lowercase()) {
-            "pdf" -> PDFDocumentParser.parse(file)
-            "pptx", "ppt" -> PPTDocumentParser.parse(file)
-            "txt" -> TXTDocumentParser.parse(file)
-            else -> emptySequence()
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval.parser
 
+import com.yanicksenn.miniretrieval.parser.adapter.TXTDocumentParser
 import com.yanicksenn.miniretrieval.to.Document
 import com.yanicksenn.miniretrieval.to.DocumentId
 import org.junit.jupiter.api.Test
