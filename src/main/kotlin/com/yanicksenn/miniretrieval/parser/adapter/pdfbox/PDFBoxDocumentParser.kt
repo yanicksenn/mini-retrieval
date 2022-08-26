@@ -1,4 +1,4 @@
-package com.yanicksenn.miniretrieval.parser.pdfbox
+package com.yanicksenn.miniretrieval.parser.adapter.pdfbox
 
 import com.yanicksenn.miniretrieval.parser.IDocumentParser
 import com.yanicksenn.miniretrieval.to.Document
