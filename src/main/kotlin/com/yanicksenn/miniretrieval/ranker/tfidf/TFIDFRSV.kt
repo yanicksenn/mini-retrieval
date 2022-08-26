@@ -12,7 +12,7 @@ import kotlin.math.sqrt
 /**
  * Retrieval status value calculator for tf-idf.
  */
-class RSV(
+class TFIDFRSV(
     private val documentIndex: StringFrequencyByKey,
     private val tokenIndex: StringFrequencyByKey,
     private val queryFrequency: StringFrequency

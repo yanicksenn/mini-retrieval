@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
 
     val maxResults = if (args.size >= 3) args[3].toInt() else 10
 
-    Application(documentsRoot, TFIDFRanker())
+    Application(documentsRoot)
         .index()
         .query(query, maxResults)
 }

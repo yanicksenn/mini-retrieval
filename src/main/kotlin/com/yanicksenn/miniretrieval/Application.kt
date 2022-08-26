@@ -3,8 +3,8 @@ package com.yanicksenn.miniretrieval
 import com.yanicksenn.miniretrieval.adapter.PDFDocumentParser
 import com.yanicksenn.miniretrieval.adapter.PPTDocumentParser
  import com.yanicksenn.miniretrieval.adapter.TXTDocumentParser
-import com.yanicksenn.miniretrieval.ranker.IRanker
 import com.yanicksenn.miniretrieval.ranker.RankerResult
+import com.yanicksenn.miniretrieval.ranker.tfidf.TFIDFRanker
 import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
 import kotlin.math.log10
@@ -14,7 +14,8 @@ import kotlin.time.Duration.Companion.milliseconds
 /**
  * Wrapper for the actual business logic.
  */
-class Application(private val documentsRoot: File, private val ranker: IRanker) {
+class Application(private val documentsRoot: File) {
+    private val ranker = TFIDFRanker()
 
     /**
      * Indexes all files within the documents root that
