@@ -2,7 +2,6 @@ package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.parser.AnyDocumentParser
 import com.yanicksenn.miniretrieval.to.DocumentResult
-import com.yanicksenn.miniretrieval.ranker.tfidf.TFIDFRanker
 import java.io.File
 import kotlin.math.log10
 import kotlin.math.min

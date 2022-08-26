@@ -1,4 +1,4 @@
-package com.yanicksenn.miniretrieval.ranker.tfidf
+package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.language.Language
 import com.yanicksenn.miniretrieval.language.LanguageDeterminer
