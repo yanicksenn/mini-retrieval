@@ -1,12 +1,8 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.parser.AnyDocumentParser
-import com.yanicksenn.miniretrieval.parser.adapter.PDFDocumentParser
-import com.yanicksenn.miniretrieval.parser.adapter.PPTDocumentParser
- import com.yanicksenn.miniretrieval.parser.adapter.TXTDocumentParser
-import com.yanicksenn.miniretrieval.ranker.RankerResult
+import com.yanicksenn.miniretrieval.to.DocumentResult
 import com.yanicksenn.miniretrieval.ranker.tfidf.TFIDFRanker
-import com.yanicksenn.miniretrieval.to.Document
 import java.io.File
 import kotlin.math.log10
 import kotlin.math.min
@@ -65,7 +61,7 @@ class Application(private val documentsRoot: File) {
         return this
     }
 
-    private fun List<RankerResult>.printResults() {
+    private fun List<DocumentResult>.printResults() {
         if (isEmpty()) {
             println("\tNo results found")
 

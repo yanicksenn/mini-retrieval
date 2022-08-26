@@ -2,7 +2,7 @@ package com.yanicksenn.miniretrieval.ranker.tfidf
 
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
-import com.yanicksenn.miniretrieval.ranker.RankerResult
+import com.yanicksenn.miniretrieval.to.DocumentResult
 import com.yanicksenn.miniretrieval.to.DocumentId
 import com.yanicksenn.miniretrieval.to.Token
 import kotlin.math.log10
@@ -18,7 +18,7 @@ class TFIDFRSV(
     private val queryFrequency: StringFrequency
 ) {
 
-    fun query(): List<RankerResult> {
+    fun query(): List<DocumentResult> {
         val accumulator = HashMap<String, Double>()
         for (token in queryFrequency.keys) {
             if (!tokenIndex.contains(token))
@@ -43,7 +43,7 @@ class TFIDFRSV(
 
         return accumulator.toList()
             .sortedByDescending { it.second }
-            .map { RankerResult(it.first, it.second) }
+            .map { DocumentResult(it.first, it.second) }
     }
 
     private fun StringFrequencyByKey.tf(documentId: DocumentId, token: Token): Double {

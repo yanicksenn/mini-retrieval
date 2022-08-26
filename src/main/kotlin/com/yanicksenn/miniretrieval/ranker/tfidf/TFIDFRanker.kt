@@ -2,7 +2,7 @@ package com.yanicksenn.miniretrieval.ranker.tfidf
 
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
-import com.yanicksenn.miniretrieval.ranker.RankerResult
+import com.yanicksenn.miniretrieval.to.DocumentResult
 import com.yanicksenn.miniretrieval.to.Document
 
 /**
@@ -22,7 +22,7 @@ class TFIDFRanker {
         }
     }
 
-    fun query(rawQuery: String): List<RankerResult> {
+    fun query(rawQuery: String): List<DocumentResult> {
         val queryFrequency = StringFrequency()
         val tokens = tokenizer.tokenize(rawQuery)
         tokens.forEach { queryFrequency.add(it) }
