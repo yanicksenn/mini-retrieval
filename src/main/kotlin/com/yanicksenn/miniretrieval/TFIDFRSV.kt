@@ -4,6 +4,7 @@ import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.to.DocumentId
 import com.yanicksenn.miniretrieval.to.DocumentResult
 import com.yanicksenn.miniretrieval.to.Token
+import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -13,27 +14,34 @@ import kotlin.math.sqrt
  */
 class TFIDFRSV(
     private val tfidfIndex: TFIDFIndex,
-    private val queryFrequency: StringFrequency) {
+    private val tokenizer: ITokenizer) {
 
-    fun query(): List<DocumentResult> {
+    private val tokenIndex = tfidfIndex.tokenIndex
+    private val documentIndex = tfidfIndex.documentIndex
+    
+    fun query(rawQuery: String): List<DocumentResult> {
+        val queryIndex = StringFrequency()
+        val tokens = tokenizer.tokenize(rawQuery)
+        tokens.forEach { queryIndex.add(it) }
+        
         val accumulator = HashMap<String, Double>()
-        for (token in queryFrequency.keys) {
-            if (!tfidfIndex.tokens.contains(token))
+        for (token in queryIndex.keys) {
+            if (!tokenIndex.contains(token))
                 continue
 
-            val b = b(token)
-            val documents = tfidfIndex.tokens[token]?.keys ?: emptySet()
+            val b = queryIndex.b(token)
+            val documents = tokenIndex[token]?.keys ?: emptySet()
             for (document in documents) {
-                val a = a(document, token)
+                val a = documentIndex.a(document, token)
                 var score = accumulator[document] ?: 0.0
                 score += a * b
                 accumulator[document] = score
             }
         }
 
-        val qNorm = qNorm()
+        val qNorm = queryIndex.qNorm()
         for ((document, score) in accumulator) {
-            val dNorm = dNorm(document)
+            val dNorm = documentIndex.dNorm(document)
             val sNorm = score / (dNorm * qNorm)
             accumulator[document] = sNorm
         }
@@ -51,26 +59,26 @@ class TFIDFRSV(
         return log10(1.0 + (this[token] ?: 0.0).toDouble())
     }
 
-    private fun idf(token: Token): Double {
-        return log10((tfidfIndex.documents.size + 1.0) / ((tfidfIndex.tokens[token]?.size ?: 0.0).toDouble() + 1.0))
-    }
 
-
-    private fun dNorm(documentId: DocumentId): Double {
-        val tokens = tfidfIndex.documents.getOrElse(documentId) { emptyMap() }
+    private fun Map<String, Map<String, Int>>.dNorm(documentId: DocumentId): Double {
+        val tokens = getOrElse(documentId) { emptyMap() }
         return sqrt(tokens.keys.sumOf { a(documentId, it).pow(2) })
     }
 
-    private fun a(documentId: DocumentId, token: Token): Double {
-        return tfidfIndex.documents.tf(documentId, token) * idf(token)
+    private fun Map<String, Map<String, Int>>.a(documentId: DocumentId, token: Token): Double {
+        return tf(documentId, token) * idf(token)
     }
 
 
-    private fun qNorm(): Double {
-        return sqrt(queryFrequency.keys.sumOf { b(it).pow(2) })
+    private fun Map<String, Int>.qNorm(): Double {
+        return sqrt(keys.sumOf { b(it).pow(2) })
     }
 
-    private fun b(token: Token): Double {
-        return queryFrequency.tf(token) * idf(token)
+    private fun Map<String, Int>.b(token: Token): Double {
+        return tf(token) * idf(token)
+    }
+
+    private fun idf(token: Token): Double {
+        return tfidfIndex.idf(token)
     }
 }

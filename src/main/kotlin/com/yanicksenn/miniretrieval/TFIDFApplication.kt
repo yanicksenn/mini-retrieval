@@ -1,6 +1,5 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.parser.AnyDocumentParser
 import com.yanicksenn.miniretrieval.to.DocumentResult
 import java.io.File
@@ -14,6 +13,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class TFIDFApplication(private val documentsRoot: File) {
     private val tokenizer = TFIDFTokenizer
     private val index = TFIDFIndex(tokenizer)
+    private val rsv = TFIDFRSV(index, tokenizer)
 
     /**
      * Indexes all files within the documents root that
@@ -49,12 +49,7 @@ class TFIDFApplication(private val documentsRoot: File) {
         println("Querying \"$rawQuery\" ...")
 
         val start = System.currentTimeMillis()
-
-        val queryFrequency = StringFrequency()
-        val tokens = tokenizer.tokenize(rawQuery)
-        tokens.forEach { queryFrequency.add(it) }
-
-        val results = TFIDFRSV(index, queryFrequency).query()
+        val results = rsv.query(rawQuery)
         val bestResults = results.take(min(results.size, maxResults))
         val stop = System.currentTimeMillis()
 
