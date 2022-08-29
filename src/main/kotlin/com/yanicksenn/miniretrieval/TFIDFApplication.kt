@@ -11,7 +11,7 @@ import kotlin.time.Duration.Companion.milliseconds
  * Application taking care indexing and querying with tf-idf.
  */
 class TFIDFApplication(private val documentsRoot: File) {
-    private val ranker = TFIDFRanker()
+    private val index = TFIDFIndex()
 
     /**
      * Indexes all files within the documents root that
@@ -26,7 +26,7 @@ class TFIDFApplication(private val documentsRoot: File) {
             .flatMap { AnyDocumentParser.parse(it) }
             .forEach {
                 println("\t${it.id}")
-                ranker.index(it)
+                index.add(it)
             }
         val stop = System.currentTimeMillis()
 
@@ -47,7 +47,7 @@ class TFIDFApplication(private val documentsRoot: File) {
         println("Querying \"$query\" ...")
 
         val start = System.currentTimeMillis()
-        val results = ranker.query(query)
+        val results = index.query(query)
         val bestResults = results.take(min(results.size, maxResults))
         val stop = System.currentTimeMillis()
 

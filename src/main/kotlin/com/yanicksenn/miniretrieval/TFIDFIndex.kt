@@ -6,14 +6,18 @@ import com.yanicksenn.miniretrieval.to.DocumentResult
 import com.yanicksenn.miniretrieval.to.Document
 
 /**
- * The ranker using tf-idf based ranking model.
+ * The index for tf-idf.
  */
-class TFIDFRanker {
+class TFIDFIndex {
     private val tokenizer = TFIDFTokenizer
     private val documentIndex = StringFrequencyByKey()
     private val tokenIndex = StringFrequencyByKey()
 
-    fun index(document: Document) {
+    /**
+     * Adds the given document to this index.
+     * @param document Document
+     */
+    fun add(document: Document) {
         val tokens = tokenizer.tokenize(document.text)
         tokens.forEach { token ->
             documentIndex.add(document.id, token)
