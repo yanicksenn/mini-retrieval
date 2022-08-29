@@ -1,17 +1,21 @@
 package com.yanicksenn.miniretrieval
 
-import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
-import com.yanicksenn.miniretrieval.to.DocumentResult
 import com.yanicksenn.miniretrieval.to.Document
+import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 
 /**
  * The index for tf-idf.
  */
-class TFIDFIndex {
-    private val tokenizer = TFIDFTokenizer
+class TFIDFIndex(private val tokenizer: ITokenizer) {
     private val documentIndex = StringFrequencyByKey()
     private val tokenIndex = StringFrequencyByKey()
+
+    val documents: Map<String, Map<String, Int>>
+        get() = documentIndex
+
+    val tokens: Map<String, Map<String, Int>>
+        get() = tokenIndex
 
     /**
      * Adds the given document to this index.
@@ -23,13 +27,5 @@ class TFIDFIndex {
             documentIndex.add(document.id, token)
             tokenIndex.add(token, document.id)
         }
-    }
-
-    fun query(rawQuery: String): List<DocumentResult> {
-        val queryFrequency = StringFrequency()
-        val tokens = tokenizer.tokenize(rawQuery)
-        tokens.forEach { queryFrequency.add(it) }
-
-        return TFIDFRSV(documentIndex, tokenIndex, queryFrequency).query()
     }
 }

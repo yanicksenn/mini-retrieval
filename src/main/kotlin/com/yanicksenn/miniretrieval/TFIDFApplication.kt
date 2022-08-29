@@ -1,5 +1,6 @@
 package com.yanicksenn.miniretrieval
 
+import com.yanicksenn.miniretrieval.indexer.StringFrequency
 import com.yanicksenn.miniretrieval.parser.AnyDocumentParser
 import com.yanicksenn.miniretrieval.to.DocumentResult
 import java.io.File
@@ -11,7 +12,8 @@ import kotlin.time.Duration.Companion.milliseconds
  * Application taking care indexing and querying with tf-idf.
  */
 class TFIDFApplication(private val documentsRoot: File) {
-    private val index = TFIDFIndex()
+    private val tokenizer = TFIDFTokenizer
+    private val index = TFIDFIndex(tokenizer)
 
     /**
      * Indexes all files within the documents root that
@@ -40,14 +42,19 @@ class TFIDFApplication(private val documentsRoot: File) {
     /**
      * Queries the n best results of the given query within
      * the indexed documents.
-     * @param query Query
+     * @param rawQuery Raw query
      * @param maxResults Max amount of results
      */
-    fun query(query: String, maxResults: Int = 10): TFIDFApplication {
-        println("Querying \"$query\" ...")
+    fun query(rawQuery: String, maxResults: Int = 10): TFIDFApplication {
+        println("Querying \"$rawQuery\" ...")
 
         val start = System.currentTimeMillis()
-        val results = index.query(query)
+
+        val queryFrequency = StringFrequency()
+        val tokens = tokenizer.tokenize(rawQuery)
+        tokens.forEach { queryFrequency.add(it) }
+
+        val results = TFIDFRSV(index, queryFrequency).query()
         val bestResults = results.take(min(results.size, maxResults))
         val stop = System.currentTimeMillis()
 
