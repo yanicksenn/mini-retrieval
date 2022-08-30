@@ -2,6 +2,7 @@ package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.indexer.StringFrequencyByKey
 import com.yanicksenn.miniretrieval.to.Document
+import com.yanicksenn.miniretrieval.to.DocumentId
 import com.yanicksenn.miniretrieval.to.Token
 import com.yanicksenn.miniretrieval.tokenizer.ITokenizer
 import kotlin.math.log10
@@ -9,18 +10,18 @@ import kotlin.math.log10
 /**
  * The index for tf-idf.
  */
-class TFIDFIndex(private val tokenizer: ITokenizer) {
+class TFIDFIndex(private val tokenizer: ITokenizer) : ITFIDFIndex {
     private val _documentIndex = StringFrequencyByKey()
     private val _tokenIndex = StringFrequencyByKey()
     private val _documentWeight = HashMap<String, Int>()
 
-    val documentIndex: Map<String, Map<String, Int>>
+    override val documentIndex: Map<DocumentId, Map<Token, Int>>
         get() = _documentIndex
 
-    val tokenIndex: Map<String, Map<String, Int>>
+    override val tokenIndex: Map<Token, Map<DocumentId, Int>>
         get() = _tokenIndex
 
-    val documentWeight: Map<String, Int>
+    override val documentWeight: Map<DocumentId, Int>
         get() = _documentWeight
 
     /**
