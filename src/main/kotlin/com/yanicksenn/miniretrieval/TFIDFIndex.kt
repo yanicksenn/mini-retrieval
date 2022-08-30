@@ -24,11 +24,7 @@ class TFIDFIndex(private val tokenizer: ITokenizer) : ITFIDFIndex {
     override val documentWeight: Map<DocumentId, Int>
         get() = _documentWeight
 
-    /**
-     * Adds the given document to this index.
-     * @param document Document
-     */
-    fun add(document: Document) {
+    override fun add(document: Document) {
         val tokens = tokenizer.tokenize(document.text)
         tokens.forEach { token ->
             _documentIndex.add(document.id, token)
@@ -39,7 +35,7 @@ class TFIDFIndex(private val tokenizer: ITokenizer) : ITFIDFIndex {
         _documentWeight[document.id] = weight
     }
 
-    fun idf(token: Token): Double {
+    override fun idf(token: Token): Double {
         return log10((documentIndex.size + 1.0) / ((tokenIndex[token]?.size ?: 0.0).toDouble() + 1.0))
     }
 }
