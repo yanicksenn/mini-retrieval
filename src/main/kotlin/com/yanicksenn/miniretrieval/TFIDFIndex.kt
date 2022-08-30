@@ -11,12 +11,17 @@ import kotlin.math.log10
  */
 class TFIDFIndex(private val tokenizer: ITokenizer) {
     private val _documentIndex = StringFrequencyByKey()
+    private val _tokenIndex = StringFrequencyByKey()
+    private val _documentWeight = HashMap<String, Int>()
+
     val documentIndex: Map<String, Map<String, Int>>
         get() = _documentIndex
 
-    private val _tokenIndex = StringFrequencyByKey()
     val tokenIndex: Map<String, Map<String, Int>>
         get() = _tokenIndex
+
+    val documentWeight: Map<String, Int>
+        get() = _documentWeight
 
     /**
      * Adds the given document to this index.
@@ -28,6 +33,9 @@ class TFIDFIndex(private val tokenizer: ITokenizer) {
             _documentIndex.add(document.id, token)
             _tokenIndex.add(token, document.id)
         }
+
+        val weight = (documentIndex[document.id] ?: emptyMap()).values.sum()
+        _documentWeight[document.id] = weight
     }
 
     fun idf(token: Token): Double {

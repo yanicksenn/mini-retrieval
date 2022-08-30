@@ -1,5 +1,7 @@
 package com.yanicksenn.miniretrieval
 
+import com.yanicksenn.miniretrieval.modifier.DocumentWeightModifier
+import com.yanicksenn.miniretrieval.modifier.SequentialModifier
 import com.yanicksenn.miniretrieval.parser.AnyDocumentParser
 import com.yanicksenn.miniretrieval.to.DocumentResult
 import java.io.File
@@ -13,7 +15,8 @@ import kotlin.time.Duration.Companion.milliseconds
 class TFIDFApplication(private val documentsRoot: File) {
     private val tokenizer = TFIDFTokenizer
     private val index = TFIDFIndex(tokenizer)
-    private val rsv = TFIDFRSV(index, tokenizer)
+    private val modifier = SequentialModifier(DocumentWeightModifier(index))
+    private val rsv = TFIDFRSV(index, tokenizer, modifier)
 
     /**
      * Indexes all files within the documents root that

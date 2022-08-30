@@ -1,6 +1,7 @@
 package com.yanicksenn.miniretrieval
 
 import com.yanicksenn.miniretrieval.indexer.StringFrequency
+import com.yanicksenn.miniretrieval.modifier.IModifier
 import com.yanicksenn.miniretrieval.to.DocumentId
 import com.yanicksenn.miniretrieval.to.DocumentResult
 import com.yanicksenn.miniretrieval.to.Token
@@ -14,7 +15,8 @@ import kotlin.math.sqrt
  */
 class TFIDFRSV(
     private val tfidfIndex: TFIDFIndex,
-    private val tokenizer: ITokenizer) {
+    private val tokenizer: ITokenizer,
+    private val modifier: IModifier) {
 
     private val tokenIndex = tfidfIndex.tokenIndex
     private val documentIndex = tfidfIndex.documentIndex
@@ -43,7 +45,7 @@ class TFIDFRSV(
         for ((document, score) in accumulator) {
             val dNorm = documentIndex.dNorm(document)
             val sNorm = score / (dNorm * qNorm)
-            accumulator[document] = sNorm
+            accumulator[document] = modifier.modify(document, sNorm)
         }
 
         return accumulator.toList()
